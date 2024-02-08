@@ -2,7 +2,7 @@
 
 n = int(input("Insira um número (em minutos): "))
 
-h = int(n / 60)
+h = n / 60
 m = n - (60 * h)
 
 if m < 10: m = "0" + str(m)
