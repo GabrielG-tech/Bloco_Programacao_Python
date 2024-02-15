@@ -16,12 +16,3 @@ valor_descontado = valor * (1 - desconto)
 # Exibindo os resultados
 print("O desconto para R$%.2f é %.0f%%" % (valor, desconto * 100))
 print("Valor com desconto: R$%.2f" % valor_descontado)
-
-
-# valor = float(input("Digite o valor da compra: "))
-# desconto = round(int(valor/100) * 0.05 + 0.05, 2)
-# if(valor >= 1900):
-#     desconto = 0.95
-# valor_descontado = valor * desconto
-# print("O desconto para R$%.2f é %.0f%%" % (valor, int(desconto*100))) 
-# print("Valor com desconto: R$%.2f" % (valor_descontado))
