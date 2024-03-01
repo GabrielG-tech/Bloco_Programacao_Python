@@ -17,8 +17,8 @@ def potencia(base, expoente=2):
     return base ** expoente
 
 # Testando a função
-base = 3
-expoente = 4
+base = int(input("Digite um número para a base da potencia: "))
+expoente = int(input("Digite um número para o expoente da potencia: "))
 resultado = potencia(base, expoente)
 print(f"{base} elevado a {expoente} é {resultado}.")
 
