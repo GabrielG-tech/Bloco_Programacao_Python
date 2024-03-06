@@ -24,4 +24,7 @@ def fatorial(n):
 # Testando a função
 numero = int(input("Digite um número para calculo de fatorial: "))
 resultado = fatorial(numero)
-print(f"O fatorial de {numero} é {resultado}.")
+
+# Formatando o resultado com separadores de milhar
+resultado_formatado = "{:,}".format(resultado).replace(",", ".")
+print(f"O fatorial de {numero} é {resultado_formatado}.")
