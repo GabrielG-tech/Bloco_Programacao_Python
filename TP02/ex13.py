@@ -6,8 +6,8 @@ lista = list(range(0, 10, 1)) + list(range(10, 0, -1))
 def histograma(lista):
     largura = 60
     for n in range(0, len(lista)//2):
-        print("\033[1;44m \033[m"*lista[n] + "\033[1;47m \033[m"*(largura-lista[n]))
+        print("\033[1;34m*\033[m"*lista[n] + "\033[1;37m*\033[m"*(largura-lista[n]))
     for n in range(len(lista)//2, len(lista)):
-        print("\033[1;44m \033[m"*lista[n] + "\033[1;41m \033[m"*(largura-lista[n]))
+        print("\033[1;34m*\033[m"*lista[n] + "\033[1;31m*\033[m"*(largura-lista[n]))
 
 histograma(lista)
