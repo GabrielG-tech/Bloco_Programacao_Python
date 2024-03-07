@@ -3,7 +3,7 @@
 
 lista = [4, 0, 0, 2, 8, 9, 2, 2]
 
-def mediaSoma(lista, soma=False):
+def mediaSoma(*lista, soma=False):
     """
     Calcula a média ou a soma dos valores em uma lista.
 
@@ -15,14 +15,15 @@ def mediaSoma(lista, soma=False):
     float: A média dos valores se soma for False, a soma dos valores caso contrário.
     """
     resposta = 0
-    if soma:
-        for item in lista:
-            resposta += item
+    if not lista:
+        print("Não há uma lista declarada")
     else:
-        for item in lista:
-            resposta += item
-        resposta = resposta / len(lista)
-    return resposta
+        if soma:
+            for item in lista: resposta += item
+        else:
+            for item in lista: resposta += item
+            resposta = resposta / len(lista)
+        return resposta
 
 print(f"A média de {lista} é {round(mediaSoma(lista), 2)}")
 print(f"A soma de {lista} é {mediaSoma(lista, True)}")
