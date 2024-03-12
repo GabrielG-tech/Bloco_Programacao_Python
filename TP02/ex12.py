@@ -7,11 +7,11 @@ def filtrar_numeros_pares(lista):
     """
     Filtra uma lista de números, removendo aqueles que não são pares.
 
-    Parâmetros:
-    lista (list): Uma lista de números inteiros.
+    Args:
+        lista (list): Uma lista de números inteiros.
 
-    Retorna:
-    list: Uma nova lista contendo apenas os números pares da lista original.
+    Returns:
+        list: Uma nova lista contendo apenas os números pares da lista original.
     """
     lista_filtrada = [num for num in lista if num % 2 == 0]
     return lista_filtrada

@@ -3,17 +3,15 @@
 
 def caixa_eletronico(valor_saque):
     """
-    Simula a operação de um caixa eletrônico, permitindo ao usuário sacar uma quantia especificada e retornar as notas necessárias para o montante.
-
-    Parâmetros:
+    Simula a operação de um caixa eletrônico, permitindo ao usuário sacar uma quantia especificada e retornar as notas necessárias para o montante, utilizando as notas disponíveis: 100, 50, 20, 10, 5 e 2 reais.
+    Em seguida, imprime na tela as notas necessárias para o saque ou uma mensagem indicando que não é possível sacar o valor solicitado, caso não seja possível combinar as notas disponíveis para alcançar o valor desejado.
+    
+    Args:
     - valor_saque: int
         O valor que o usuário deseja sacar do caixa eletrônico.
 
-    Retorno:
+    Returns:
     Esta função não retorna nenhum valor. Ela imprime na tela as notas necessárias para o saque, com base nas notas disponíveis no caixa eletrônico.
-
-    Comportamento:
-    A função calcula as notas necessárias para o saque do valor especificado pelo usuário, utilizando as seguintes notas disponíveis: 100, 50, 20, 10, 5 e 2 reais. Em seguida, imprime na tela as notas necessárias para o saque ou uma mensagem indicando que não é possível sacar o valor solicitado, caso não seja possível combinar as notas disponíveis para alcançar o valor desejado.
     """
     notas_disponiveis = [100, 50, 20, 10, 5, 2]
     notas_para_saque = {}

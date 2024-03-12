@@ -8,11 +8,11 @@ def filtrar_por_tamanho(lista):
     """
     Filtra uma lista de strings por tamanho, organizando-as em ordem crescente de comprimento.
 
-    Parâmetros:
-    lista (list): Uma lista de strings a serem filtradas e organizadas.
+    Args:
+        lista (list): Uma lista de strings a serem filtradas e organizadas.
 
-    Retorna:
-    list: A lista original e a lista ordenada por tamanho das strings.
+    Returns:
+        tuple: Uma tupla contendo a lista original e a lista ordenada por tamanho das strings.
     """
     lista_ordenada = sorted(lista, key=len)
     return lista, lista_ordenada

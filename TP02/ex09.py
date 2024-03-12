@@ -10,9 +10,6 @@ def fatorial(n):
 
     Returns:
         int: O fatorial de n.
-
-    Raises:
-        ValueError: Se n for um número negativo.
     """
     if n < 0:
         raise ValueError("O fatorial não está definido para números negativos.")

@@ -7,11 +7,11 @@ def geradorLista(inicial, final):
     """
     Gera uma lista de números inteiros aleatórios dentro de um intervalo.
 
-    Parâmetros:
+    Args:
         inicial (int): O limite inferior do intervalo.
         final (int): O limite superior do intervalo.
 
-    Retorna:
+    Returns:
         list: Uma lista de 5 números inteiros aleatórios dentro do intervalo especificado.
     """
     lista = []
@@ -23,10 +23,10 @@ def contadorPositivos(lista):
     """
     Conta o número de elementos positivos em uma lista.
 
-    Parâmetros:
+    Args:
         lista (list): Uma lista de números inteiros.
 
-    Retorna:
+    Returns:
         int: O número de elementos positivos na lista.
     """
     numPositivos = 0
