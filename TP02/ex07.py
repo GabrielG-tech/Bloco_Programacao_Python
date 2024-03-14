@@ -5,7 +5,7 @@ def desenhar_linha(caractere='-', comprimento=25):
     """
     Desenha uma linha na tela usando um caractere especificado e um comprimento.
 
-    Parâmetros:
+    Args:
     - caractere (str): O caractere usado para desenhar a linha. O padrão é '-'.
     - comprimento (int): O comprimento da linha a ser desenhada. O padrão é 10.
     """

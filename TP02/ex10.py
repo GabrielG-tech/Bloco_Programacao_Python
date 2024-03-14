@@ -8,10 +8,10 @@ def decimal_para_binario(decimal):
     """
     Converte um número decimal para binário.
 
-    Parâmetros:
+    Args:
     - decimal (int): O número decimal a ser convertido.
 
-    Retorna:
+    Returns:
     - str: O número binário equivalente como uma string.
     """
     if decimal == 0:

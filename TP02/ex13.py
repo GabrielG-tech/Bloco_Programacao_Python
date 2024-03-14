@@ -7,13 +7,13 @@ def gerarLista(tamanho, valor_minimo, valor_maximo):
     """
     Gera uma lista de números aleatórios.
 
-    Parâmetros:
-    - tamanho: inteiro que representa o tamanho da lista a ser gerada
-    - valor_minimo: inteiro que representa o valor mínimo que pode ser gerado na lista
-    - valor_maximo: inteiro que representa o valor máximo que pode ser gerado na lista
+    Args:
+        tamanho (int): O tamanho da lista a ser gerada.
+        valor_minimo (int): O valor mínimo que pode ser gerado na lista.
+        valor_maximo (int): O valor máximo que pode ser gerado na lista.
 
-    Retorno:
-    Uma lista de números inteiros aleatórios com o tamanho especificado e dentro do intervalo especificado.
+    Returns:
+        list: Uma lista de números inteiros aleatórios com o tamanho especificado e dentro do intervalo especificado.
     """
     return [random.randint(valor_minimo, valor_maximo) for i in range(tamanho)]
 
@@ -21,11 +21,11 @@ def histograma(lista):
     """
     Imprime um histograma na tela usando asteriscos para representar a frequência dos números na lista.
 
-    Parâmetros:
-    - lista: uma lista de números inteiros
+    Args:
+        lista (list): Uma lista de números inteiros.
 
-    Retorno:
-    A função não retorna nada, apenas imprime o histograma na tela.
+    Returns:
+        None
     """
     largura = max(lista)  # Determina a largura máxima do histograma
     for i in range(largura, 0, -1):
