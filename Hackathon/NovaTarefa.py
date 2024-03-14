@@ -1,5 +1,5 @@
 import tkinter as tk
-import Interface
+from util import definirTamanhoTela
 
 add_janela = None
 
