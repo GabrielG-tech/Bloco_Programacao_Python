@@ -40,8 +40,7 @@ def contar_caracteres(string):
     print("Caracteres especiais:", especiais)
     print("Espaços:", espacos)
 
-# Recebendo uma string do usuário
-entrada = input("Digite uma string: ")
+entrada = input("Digite uma frase: ")
 
 # Chamando a função para contar e classificar os caracteres
 contar_caracteres(entrada)
