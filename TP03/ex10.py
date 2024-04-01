@@ -6,45 +6,51 @@ def codificar_mensagem(mensagem, chave):
     Codifica uma mensagem usando a cifra de César.
 
     Argumentos:
-        mensagem (str): A mensagem a ser codificada.
+        mensagem (str): Uma mensagem a ser codificada.
         chave (int): O número de posições para deslocar no alfabeto.
 
     Retorna:
-        str: A mensagem codificada.
+        str: Mensagem codificada.
     """
+    
     alfabeto = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
     mensagem_codificada = ''
+
     for caractere in mensagem:
         if caractere.isalpha():
+            # Método da Cifra de César
             indice = alfabeto.index(caractere)
+            # Aplica a mudança com base na chave e o módulo (%) garante que o indice não ultrapasse o limite de caracteres de alfabeto.
             novo_indice = (indice + chave) % len(alfabeto)
             novo_caractere = alfabeto[novo_indice]
             mensagem_codificada += novo_caractere
         else:
+            # Caso haja elementos que não sejam letras ele sera adicionando na mesma posição de origem
             mensagem_codificada += caractere
     return mensagem_codificada
 
 def decodificar_mensagem(mensagem_codificada, chave):
     """
-    Decodifica uma mensagem previamente codificada com a cifra de César.
+    Decodifica uma mensagem que já foi codificada com a cifra de César.
 
     Argumentos:
-        mensagem_codificada (str): A mensagem codificada.
+        mensagem_codificada (str): Uma mensagem codificada.
         chave (int): O número de posições para deslocar no alfabeto.
 
     Retorna:
-        str: A mensagem decodificada.
+        str: Uma mensagem decodificada.
     """
     return codificar_mensagem(mensagem_codificada, -chave)
 
-# Entrada da mensagem pelo usuário
-mensagem_original = input("Digite a mensagem: ")
-chave = int(input("Digite a chave de codificação (um número inteiro): "))
+mensagem = input("Digite a mensagem: ")
 
-# Codificar a mensagem
-mensagem_codificada = codificar_mensagem(mensagem_original, chave)
+while True:
+    chave = int(input("Digite a chave de codificação (um número inteiro): "))
+    if chave is int: break
+    else: print("A chave deve ser um número inteiro.")
+
+mensagem_codificada = codificar_mensagem(mensagem, chave)
 print("Mensagem codificada:", mensagem_codificada)
 
-# Decodificar a mensagem
 mensagem_decodificada = decodificar_mensagem(mensagem_codificada, chave)
 print("Mensagem decodificada:", mensagem_decodificada)
