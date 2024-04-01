@@ -5,7 +5,7 @@ def codificar_mensagem(mensagem, chave):
     """
     Codifica uma mensagem usando a cifra de César.
 
-    Parâmetros:
+    Argumentos:
         mensagem (str): A mensagem a ser codificada.
         chave (int): O número de posições para deslocar no alfabeto.
 
@@ -28,7 +28,7 @@ def decodificar_mensagem(mensagem_codificada, chave):
     """
     Decodifica uma mensagem previamente codificada com a cifra de César.
 
-    Parâmetros:
+    Argumentos:
         mensagem_codificada (str): A mensagem codificada.
         chave (int): O número de posições para deslocar no alfabeto.
 
