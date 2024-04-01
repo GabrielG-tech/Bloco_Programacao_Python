@@ -34,7 +34,8 @@ def validar_senha(senha):
     
     # Verificando se atende a todos os critérios
     if (len(senha) >= comprimento_minimo):
-        if (possui_maiuscula and possui_minuscula and possui_numero and possui_caracter_especial):
+        if (possui_maiuscula and possui_minuscula and
+            possui_numero and possui_caracter_especial):
             return "Senha forte"
     else:
         return "Senha fraca"
