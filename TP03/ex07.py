@@ -7,7 +7,7 @@ def gerar_senha(comprimento):
     """
     Gera uma senha aleatória com letras (maiúsculas e minúsculas), números e símbolos.
 
-    Parâmetros:
+    Argumentos:
     comprimento (int): O comprimento da senha a ser gerada.
 
     Retorna:

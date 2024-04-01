@@ -5,7 +5,7 @@ def substituir_palavra(texto, palavra_antiga, palavra_nova):
     """
     Substitui todas as ocorrências de uma palavra específica em um texto por outra palavra.
 
-    Parâmetros:
+    Argumentos:
     texto (str): O texto no qual as substituições serão feitas.
     palavra_antiga (str): A palavra a ser substituída.
     palavra_nova (str): A palavra que substituirá a palavra antiga.

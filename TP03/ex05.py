@@ -5,7 +5,7 @@ def romano_para_decimal(romano):
     """
     Converte um número romano para decimal.
 
-    Parâmetros:
+    Argumentos:
     romano (str): O número romano a ser convertido.
 
     Retorna:
@@ -31,7 +31,7 @@ def decimal_para_romano(decimal):
     """
     Converte um número decimal para romano.
 
-    Parâmetros:
+    Argumentos:
     decimal (int): O número decimal a ser convertido.
 
     Retorna:

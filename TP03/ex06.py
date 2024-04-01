@@ -5,7 +5,7 @@ def contar_caracteres(string):
     """
     Conta e classifica os caracteres em uma string.
 
-    Parâmetros:
+    Argumentos:
     string (str): A string da qual os caracteres serão contados e classificados.
 
     Retorna:
