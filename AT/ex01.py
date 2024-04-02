@@ -96,7 +96,7 @@ perguntas = [
     }
 ]
 
-# Perguntas utilizadas nas rodadaa anteriores
+# Perguntas utilizadas nas rodada anteriores
 perguntas_utilizadas = []
 
 def mostra_pergunta(pergunta):
