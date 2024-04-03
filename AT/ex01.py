@@ -135,7 +135,18 @@ def selecionar_perguntas():
     list: Uma lista contendo as perguntas selecionadas.
     """
     perguntas_disponiveis = [pergunta for pergunta in perguntas if pergunta not in perguntas_utilizadas]
-    return random.sample(perguntas_disponiveis, 5)
+    if len(perguntas_disponiveis) == 0:
+        return "Sem mais questões"
+    else:
+        return random.sample(perguntas_disponiveis, min(5, len(perguntas_disponiveis))) # Caso tenha menos de 5 questões disponíveis ele usa as restantes
+
+def titulo(mensagem = "Seja Bem-Vindo(a) ao \033[1mTrivia do Código\033[0m"):
+        """
+        Imprime o título da Trivia do Código.
+        """
+        print("+-" + "-"*(len(mensagem)-8) + "-+")
+        print(f"| {mensagem} |")
+        print("+-" + "-"*(len(mensagem)-8) + "-+")
 
 def jogo_trivia(pontuacao_total=0):
     """
@@ -150,16 +161,20 @@ def jogo_trivia(pontuacao_total=0):
     Returns:
     int: A pontuação total de todas as rodadas.
     """
-    print("+---------------------------------------+")
-    print("| Seja Bem-Vindo(a) ao \033[1mTrivia do Código\033[0m |")
-    print("+---------------------------------------+")
-
     pontuacao = 0
-    perguntas_rodada = selecionar_perguntas()
+    perguntas_rodada = selecionar_perguntas() 
+    num_rodada = 1
 
     # Adiciona as perguntas usadas na rodada anterior a um outro dicionário para evitar repetições
     perguntas_utilizadas.extend(perguntas_rodada)
     
+    if perguntas_rodada == "Sem mais questões":
+        titulo("\033[1mParabéns\033[0m")
+        print("Você zerou o jogo! Não há mais perguntas disponíveis.")
+        return pontuacao_total
+    
+    titulo(f"\033[1m{num_rodada}º Rodada\033[0m")
+
     for pergunta in perguntas_rodada:
         mostra_pergunta(pergunta)
         resposta = input("Escolha a alternativa correta (a, b, c ou d): ").lower()
@@ -168,6 +183,7 @@ def jogo_trivia(pontuacao_total=0):
         else:
             break
     print("Pontuação da rodada:", pontuacao)
+    num_rodada += 1
     pontuacao_total += pontuacao
 
     if pontuacao == 5:
@@ -175,5 +191,6 @@ def jogo_trivia(pontuacao_total=0):
         return jogo_trivia(pontuacao_total)
     return pontuacao_total
 
+titulo()
 pontuacao_total = jogo_trivia()
 print("O somatório da sua pontuação de todas as rodadas foi de\033[1m", pontuacao_total, "pontos!\033[0m")
