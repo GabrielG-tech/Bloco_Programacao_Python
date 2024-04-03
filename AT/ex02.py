@@ -131,10 +131,10 @@ class MonitorFinanceiro:
             saldo_atual = 0
             for receita in MonitorFinanceiro.receitas:
                 saldo_atual += receita[0]
-                print(f"\033[1;32mReceita: +{receita[0]}\033[m ({receita[1]}), Saldo: {colorirSaldo(saldo_atual)}")
+                print(f"\033[1;32m● Receita: +{receita[0]}\033[m ({receita[1]}), Saldo: {colorirSaldo(saldo_atual)}")
             for despesa in MonitorFinanceiro.despesas:
                 saldo_atual -= despesa[0]
-                print(f"\033[1;31mDespesa: -{despesa[0]}\033[m ({despesa[1]}){' - ' + despesa[2] if despesa[2] else ''}, Saldo: {colorirSaldo(saldo_atual)}")
+                print(f"\033[1;31m● Despesa: -{despesa[0]}\033[m ({despesa[1]}){' - ' + despesa[2] if despesa[2] else ''}, Saldo: {colorirSaldo(saldo_atual)}")
 
     def relatorio_gastos_por_categoria():
         """
@@ -146,14 +146,15 @@ class MonitorFinanceiro:
         else:
             categorias = {}
             for despesa in MonitorFinanceiro.despesas:
-                valor, categoria, descricao = despesa
-                if categoria not in categorias:
-                    categorias[categoria] = valor
+                valor, categoria_id, descricao = despesa
+                categoria_nome = MonitorFinanceiro.categorias_de_despesa[categoria_id]  # Obtém o nome da categoria usando o ID
+                if categoria_nome not in categorias:
+                    categorias[categoria_nome] = valor
                 else:
-                    categorias[categoria] += valor
+                    categorias[categoria_nome] += valor
             
             for categoria, total_gasto in categorias.items():
-                print(f"{categoria}: {total_gasto}") # Mostra o somátorio dos gastos por categoria
+                print(f"● {categoria}: \033[1;31m{total_gasto}\033[m") # Mostra o somátorio dos gastos por categoria
 
     def relatorio_receitas():
         """
@@ -164,10 +165,7 @@ class MonitorFinanceiro:
             print("Nenhuma receita até o momento...")
         else:
             for receita in MonitorFinanceiro.receitas:
-                print(f"{receita[0]} ({receita[1]})")
-
-saldo_inicial = float(input("Digite o saldo inicial: ").replace(',', '.'))
-MonitorFinanceiro.saldo = saldo_inicial
+                print(f"● \033[1;32m{receita[0]}\033[m ({receita[1]})")
 
 def validar_input_float(mensagem):
     """
@@ -203,9 +201,11 @@ def validar_input_inteiro(mensagem):
         except ValueError:
             print("Entrada inválida. Por favor, insira um número inteiro existente nas opções.")
 
+saldo_inicial = validar_input_float("Digite o saldo inicial: ")
+MonitorFinanceiro.saldo = saldo_inicial
+
 while True:
     mostrar_menu()
-    
     escolha = validar_input_inteiro("Escolha uma opção: ")
 
     if escolha == 1:
