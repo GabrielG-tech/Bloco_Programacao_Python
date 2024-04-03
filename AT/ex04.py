@@ -30,10 +30,10 @@ def cifra_cesar(mensagem, chave=CHAVE_CRIPTOGRAFIA):
             novo_caractere = alfabeto[novo_indice]
             mensagem_codificada += novo_caractere
         else:
-            mensagem_codificada += caractere
+            mensagem_codificada += caractere # Caso o não seja uma letra, mantém o caractere original
     return mensagem_codificada
 
-def gerar_senha(comprimento):
+def gerar_senha(comprimento=4):
     """
     Gera uma senha aleatória com letras (maiúsculas e minúsculas), números e símbolos.
 
@@ -74,9 +74,10 @@ def criar_tabela():
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
     cursor.execute('''CREATE TABLE IF NOT EXISTS Senhas
-                      (nome_servico TEXT, username TEXT, senha TEXT)''')
+                      (nome_servico_criptografado TEXT, nome_servico TEXT, username TEXT, senha TEXT)''')
     conn.commit()
     conn.close()
+
 
 def criptografar_dados(dados):
     """
@@ -111,24 +112,26 @@ def salvar_dados(nome_servico, username, senha):
         username (str): O username associado ao serviço.
         senha (str): A senha associada ao serviço.
     """
+    nome_servico_criptografado = criptografar_dados(nome_servico)
+    username_criptografado = criptografar_dados(username)
     senha_criptografada = criptografar_dados(senha)
+
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO Senhas VALUES (?, ?, ?)", (nome_servico, username, senha_criptografada))
+    cursor.execute("INSERT INTO Senhas VALUES (?, ?, ?, ?)", (nome_servico_criptografado, nome_servico, username_criptografado, senha_criptografada))
     conn.commit()
     conn.close()
 
 def consultar_dados():
     """
     Consulta os dados de um serviço específico na tabela Senhas do banco de dados.
-    """
+    """    
+    nome_servico = input("Digite o nome do serviço: ")
     palavra_chave = input("Digite a palavra-chave para acesso à consulta: ")
     if palavra_chave != PALAVRA_CHAVE:
         print("Palavra-chave incorreta.")
         return
     
-    nome_servico = input("Digite o nome do serviço: ")
-
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM Senhas WHERE nome_servico = ?", (nome_servico,))
@@ -136,13 +139,15 @@ def consultar_dados():
     conn.close()
 
     if resultado:
-        username = resultado[1]
-        senha_criptografada = resultado[2]
+        username_criptografado = resultado[2]
+        senha_criptografada = resultado[3]
+        username = descriptografar_dados(username_criptografado)
         senha = descriptografar_dados(senha_criptografada)
         print(f"Username: {username}")
         print(f"Senha: {senha}")
     else:
         print("Serviço não encontrado.")
+
 
 def validar_input_inteiro(mensagem):
     """
