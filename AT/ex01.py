@@ -148,7 +148,7 @@ def titulo(mensagem = "Seja Bem-Vindo(a) ao \033[1mTrivia do Código\033[0m"):
         print(f"| {mensagem} |")
         print("+-" + "-"*(len(mensagem)-8) + "-+")
 
-def jogo_trivia(pontuacao_total=0):
+def jogo_trivia(pontuacao_total=0, num_rodada=1):
     """
     Executa o jogo trivia.
 
@@ -163,17 +163,18 @@ def jogo_trivia(pontuacao_total=0):
     """
     pontuacao = 0
     perguntas_rodada = selecionar_perguntas() 
-    num_rodada = 1
 
     # Adiciona as perguntas usadas na rodada anterior a um outro dicionário para evitar repetições
     perguntas_utilizadas.extend(perguntas_rodada)
     
     if perguntas_rodada == "Sem mais questões":
         titulo("\033[1mParabéns\033[0m")
-        print("Você zerou o jogo! Não há mais perguntas disponíveis.")
+        print("Parabéns!! \033[1mVocê zerou o jogo!\033[0m Não há mais perguntas disponíveis.")
         return pontuacao_total
     
+    
     titulo(f"\033[1m{num_rodada}º Rodada\033[0m")
+    num_rodada += 1
 
     for pergunta in perguntas_rodada:
         mostra_pergunta(pergunta)
@@ -183,12 +184,12 @@ def jogo_trivia(pontuacao_total=0):
         else:
             break
     print("Pontuação da rodada:", pontuacao)
-    num_rodada += 1
+    
     pontuacao_total += pontuacao
 
     if pontuacao == 5:
         print("Parabéns! Você acertou todas as perguntas. Iniciando uma nova rodada...\n")
-        return jogo_trivia(pontuacao_total)
+        return jogo_trivia(pontuacao_total, num_rodada)
     return pontuacao_total
 
 titulo()
