@@ -31,8 +31,9 @@ def gerar_senha(comprimento):
     # Embaralhando a senha
     random.shuffle(senha)
     
-    # Convertendo a lista de caracteres em uma string e retornando a senha
-    return ''.join(senha)
+    # Converte a lista de caracteres em uma string
+    senha = ''.join(senha)
+    return senha
 
 comprimento_senha = int(input("Digite o comprimento da senha desejada: "))
 senha_gerada = gerar_senha(comprimento_senha)
