@@ -20,22 +20,52 @@ def mostrar_menu():
 
     return input("Escolha uma opção: ").replace(',', '.')
 
+def colorirSaldo(saldo):
+    """
+    Retorna uma string formatada de saldo, colorindo de verde se for positivo, vermelho se for negativo e mantendo sem cor se for igual a zero.
+
+    Args:
+        saldo (float): O saldo a ser colorido.
+
+    Returns:
+        str: Uma string formatada com o saldo colorido (ou não).
+    """
+    if saldo > 0:
+        return f"\033[1;32m{saldo}\033[m" # Pinta de verde
+    elif saldo < 0:
+        return f"\033[1;31m{saldo}\033[m" # Pinta de vermelho
+    else:
+        return f"{saldo}"
+
 class MonitorFinanceiro:
     """
     Classe para realizar o monitoramento financeiro.
 
-    Atributos:
+    Attributes:
         saldo (float): O saldo atual.
         receitas (list): Lista de tuplas contendo valor e descrição das receitas.
         despesas (list): Lista de tuplas contendo valor, categoria e descrição das despesas.
+
+    Methods:
+        adicionar_receita(valor, descricao):
+            Adiciona uma receita ao saldo e à lista de receitas.
+
+        adicionar_despesa(valor, categoria, descricao=""):
+            Adiciona uma despesa ao saldo e à lista de despesas.
+
+        extrato():
+            Exibe o extrato financeiro mostrando as receitas e despesas.
+
+        relatorio_gastos_por_categoria():
+            Exibe um relatório de gastos por categoria.
+
+        relatorio_receitas():
+            Exibe um relatório de receitas.
     """
-    
-    # Atributos da classe:
     saldo = 0
     receitas = []
     despesas = []
 
-    # Métodos da classe:
     def adicionar_receita(valor, descricao):
         """
         Adiciona uma receita ao saldo e à lista de receitas.
@@ -70,17 +100,17 @@ class MonitorFinanceiro:
             saldo_atual = 0
             for receita in MonitorFinanceiro.receitas:
                 saldo_atual += receita[0]
-                print(f"Receita: +{receita[0]} ({receita[1]}), Saldo: {saldo_atual}")
+                print(f"\033[1;32mReceita: +{receita[0]}\033[m ({receita[1]}), Saldo: {colorirSaldo(saldo_atual)}")
             for despesa in MonitorFinanceiro.despesas:
                 saldo_atual -= despesa[0]
-                print(f"Despesa: -{despesa[0]} ({despesa[1]}){' - ' + despesa[2] if despesa[2] else ''}, Saldo: {saldo_atual}")
+                print(f"\033[1;31mDespesa: -{despesa[0]}\033[m ({despesa[1]}){' - ' + despesa[2] if despesa[2] else ''}, Saldo: {colorirSaldo(saldo_atual)}")
 
     def relatorio_gastos_por_categoria():
         """
         Exibe um relatório de gastos por categoria.
         """
         print("Relatório de Gastos por Categoria:")
-        if not MonitorFinanceiro.receitas:  # Verifica se a lista está vazia
+        if not MonitorFinanceiro.despesas:  # Verifica se a lista está vazia
             print("Nenhum gasto até o momento...")
         else:
             categorias = {}
@@ -103,7 +133,6 @@ class MonitorFinanceiro:
         else:
             for receita in MonitorFinanceiro.receitas:
                 print(f"{receita[0]} ({receita[1]})")
-
 
 saldo_inicial = float(input("Digite o saldo inicial: ").replace(',', '.'))
 MonitorFinanceiro.saldo = saldo_inicial
