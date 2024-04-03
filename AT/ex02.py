@@ -186,7 +186,6 @@ def validar_input_float(mensagem):
         except ValueError:
             print("Entrada inválida. Por favor, insira um número válido.")
 
-
 def validar_input_inteiro(mensagem):
     """
     Valida a entrada do usuário para um número inteiro.
@@ -203,7 +202,6 @@ def validar_input_inteiro(mensagem):
             return entrada
         except ValueError:
             print("Entrada inválida. Por favor, insira um número inteiro existente nas opções.")
-
 
 while True:
     mostrar_menu()
