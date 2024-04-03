@@ -3,9 +3,6 @@
 def mostrar_menu():
     """
     Mostra o menu de opções para o usuário.
-
-    Retorna:
-        str: A opção escolhida pelo usuário.
     """
     print("+--------------------------+")
     print("| Monitoramento Financeiro |")
@@ -18,11 +15,9 @@ def mostrar_menu():
     print("[5] - Relatório de Receitas")
     print("[6] - Sair")
 
-    return input("Escolha uma opção: ").replace(',', '.')
-
 def colorirSaldo(saldo):
     """
-    Retorna uma string formatada de saldo, colorindo de verde se for positivo, vermelho se for negativo e mantendo sem cor se for igual a zero.
+    Returns uma string formatada de saldo, colorindo de verde se for positivo, vermelho se for negativo e mantendo sem cor se for igual a zero.
 
     Args:
         saldo (float): O saldo a ser colorido.
@@ -66,6 +61,42 @@ class MonitorFinanceiro:
     receitas = []
     despesas = []
 
+    categorias_de_despesa = {
+        1: "Alimentação",
+        2: "Transporte",
+        3: "Moradia",
+        4: "Saúde",
+        5: "Educação",
+        6: "Lazer",
+        7: "Outros"
+    }
+
+    def mostrar_menu_categorias():
+        """
+        Mostra o menu de opções de categorias para o usuário.
+        """
+        print("Escolha a categoria da despesa:")
+        for id_categoria, nome_categoria in MonitorFinanceiro.categorias_de_despesa.items():
+            print(f"[{id_categoria}] - {nome_categoria}")
+
+    def obter_categoria_despesa():
+        """
+        Solicita ao usuário a escolha da categoria de despesa e retorna a categoria escolhida válidada.
+        
+        Returns:
+            int: O ID da categoria escolhida.
+        """
+        while True:
+            MonitorFinanceiro.mostrar_menu_categorias()
+            try:
+                categoria_escolhida = int(input("Digite o número da categoria: "))
+                if categoria_escolhida in MonitorFinanceiro.categorias_de_despesa:
+                    return categoria_escolhida
+                else:
+                    print("Categoria inválida. Tente novamente.")
+            except ValueError:
+                print("Por favor, digite apenas números.")
+
     def adicionar_receita(valor, descricao):
         """
         Adiciona uma receita ao saldo e à lista de receitas.
@@ -107,7 +138,7 @@ class MonitorFinanceiro:
 
     def relatorio_gastos_por_categoria():
         """
-        Exibe um relatório de gastos por categoria.
+        Exibe um relatório de gastos por categoria já pré-definidas.
         """
         print("Relatório de Gastos por Categoria:")
         if not MonitorFinanceiro.despesas:  # Verifica se a lista está vazia
@@ -115,13 +146,14 @@ class MonitorFinanceiro:
         else:
             categorias = {}
             for despesa in MonitorFinanceiro.despesas:
-                categoria = despesa[1]
-                if categoria in categorias:
-                    categorias[categoria] += despesa[0]
+                valor, categoria, descricao = despesa
+                if categoria not in categorias:
+                    categorias[categoria] = valor
                 else:
-                    categorias[categoria] = despesa[0]
-            for categoria, total in sorted(categorias.items(), key=lambda x: x[1], reverse=True):
-                print(f"{categoria}: {total}")
+                    categorias[categoria] += valor
+            
+            for categoria, total_gasto in categorias.items():
+                print(f"{categoria}: {total_gasto}") # Mostra o somátorio dos gastos por categoria
 
     def relatorio_receitas():
         """
@@ -137,25 +169,63 @@ class MonitorFinanceiro:
 saldo_inicial = float(input("Digite o saldo inicial: ").replace(',', '.'))
 MonitorFinanceiro.saldo = saldo_inicial
 
-while True:
-    escolha = mostrar_menu()
+def validar_input_float(mensagem):
+    """
+    Valida a entrada do usuário para um número decimal (float).
 
-    if escolha == "1":
-        valor = float(input("Digite o valor da receita: ").replace(',', '.'))
+    Args:
+        mensagem (str): A mensagem a ser exibida ao solicitar a entrada do usuário.
+
+    Returns:
+        float: O valor inserido pelo usuário.
+    """
+    while True:
+        try:
+            entrada = float(input(mensagem).replace(',', '.'))
+            return entrada
+        except ValueError:
+            print("Entrada inválida. Por favor, insira um número válido.")
+
+
+def validar_input_inteiro(mensagem):
+    """
+    Valida a entrada do usuário para um número inteiro.
+
+    Args:
+        mensagem (str): A mensagem a ser exibida ao solicitar a entrada do usuário.
+
+    Returns:
+        int: O valor inserido pelo usuário.
+    """
+    while True:
+        try:
+            entrada = int(input(mensagem))
+            return entrada
+        except ValueError:
+            print("Entrada inválida. Por favor, insira um número inteiro existente nas opções.")
+
+
+while True:
+    mostrar_menu()
+    
+    escolha = validar_input_inteiro("Escolha uma opção: ")
+
+    if escolha == 1:
+        valor = validar_input_float("Digite o valor da receita: ")
         descricao = input("Descreva a fonte financeira: ")
         MonitorFinanceiro.adicionar_receita(valor, descricao)
-    elif escolha == "2":
-        valor = float(input("Digite o valor da despesa: ").replace(',', '.'))
-        categoria = input("Digite a categoria da despesa: ")
-        descricao = input("Digite uma descrição (opcional): ")
-        MonitorFinanceiro.adicionar_despesa(valor, categoria, descricao)
-    elif escolha == "3":
+    elif escolha == 2:
+        categoria_escolhida = MonitorFinanceiro.obter_categoria_despesa()
+        valor = validar_input_float("Digite o valor da despesa: ")
+        descricao = input("Digite a descrição (opcional): ")
+        MonitorFinanceiro.adicionar_despesa(valor, categoria_escolhida, descricao)
+    elif escolha == 3:
         MonitorFinanceiro.extrato()
-    elif escolha == "4":
+    elif escolha == 4:
         MonitorFinanceiro.relatorio_gastos_por_categoria()
-    elif escolha == "5":
+    elif escolha == 5:
         MonitorFinanceiro.relatorio_receitas()
-    elif escolha == "6":
+    elif escolha == 6:
         print("Fim do programa.")
         break
     else:
