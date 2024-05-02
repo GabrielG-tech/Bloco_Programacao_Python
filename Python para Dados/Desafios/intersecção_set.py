@@ -5,3 +5,7 @@ grupoB = ["filme3", "filme4", "filme5", "filme6", "filme7"]
 
 intersection_set = set(grupoA).intersection(set(grupoB))
 print(intersection_set)
+
+teste = [filmeA for filmeA in grupoA for filmeB in grupoB if (filmeB == filmeA)]
+
+print(teste)
