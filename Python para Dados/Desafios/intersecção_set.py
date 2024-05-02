@@ -7,5 +7,8 @@ intersection_set = set(grupoA).intersection(set(grupoB))
 print(intersection_set)
 
 teste = [filmeA for filmeA in grupoA for filmeB in grupoB if (filmeB == filmeA)]
+teste = [filmeA for filmeA in grupoA if filmeA in grupoB]
+
+
 
 print(teste)
