@@ -18,17 +18,11 @@ def transposta(matriz):
 
     return matriz_transposta
 
-
 matriz = [
     [1, 5],
     [7, 3],
     [8, 2]
 ]
-# matriz = [
-#     [1, 2, 3],
-#     [4, 5, 6],
-#     [7, 8, 9]
-# ]
 
 transposta_resultado = transposta(matriz)
 
