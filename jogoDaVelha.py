@@ -64,7 +64,7 @@ def jogo_da_velha():
                 print(f"Parabéns, jogador {vencedor.strip()}! Você ganhou!")
                 break
             elif jogar_velha(tabuleiro):
-                print("Deu velha!")
+                print("Iiih deu velha!")
                 break
             jogador_atual = 'O' if jogador_atual == 'X' else 'X'
         repetir = input("Deseja jogar novamente? (sim/não): ").lower().strip()

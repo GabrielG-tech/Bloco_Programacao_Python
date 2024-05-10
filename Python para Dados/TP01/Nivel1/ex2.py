@@ -5,7 +5,7 @@ def imprimir_tabuleiro(tabuleiro):
     for i, linha in enumerate(tabuleiro):
         print("|".join(linha))
         if i != 2: 
-            print("-" * 3 + "+" + "-" * 3 + "+"+ "-" * 3)
+            print("-" * 5 + "+" + "-" * 5 + "+"+ "-" * 5)
 
 def verificar_ganhador(tabuleiro):
     for linha in tabuleiro:
@@ -38,7 +38,7 @@ def jogar_velha(tabuleiro):
                 return False
     return True
 
-def tratar_input(mensagem, nome):
+def tratar_input(mensagem):
     while True:
         try:
             posicao = int(input(mensagem)) - 1
@@ -49,23 +49,31 @@ def tratar_input(mensagem, nome):
         except ValueError:
             print("Valor inserido deve ser um número, tente novamente.")
 
-# Inicia o tabuleiro
-tabuleiro = [["   " for _ in range(3)] for _ in range(3)]
-imprimir_tabuleiro(tabuleiro)
+def jogo_da_velha():
+    # Inicialização do tabuleiro
+    tabuleiro = [["   " for _ in range(3)] for _ in range(3)]
+    imprimir_tabuleiro(tabuleiro)
 
-jogador_atual = 'X'
+    jogador_atual = 'X'
+
+    while True:
+        linha = tratar_input(f"Jogador {jogador_atual}: Escolha a linha (1, 2 ou 3): ", "linha")
+        coluna = tratar_input(f"Jogador {jogador_atual}: Escolha a coluna (1, 2 ou 3): ", "coluna")
+
+        if jogar(tabuleiro, linha, coluna, jogador_atual):
+            imprimir_tabuleiro(tabuleiro)
+            vencedor = verificar_ganhador(tabuleiro)
+            if vencedor:
+                print(f"Parabéns, jogador {vencedor.strip()}! Você ganhou!")
+                break
+            elif jogar_velha(tabuleiro):
+                print("Iiih deu velha!")
+                break
+            jogador_atual = 'O' if jogador_atual == 'X' else 'X'
+        repetir = input("Deseja jogar novamente? (sim/não): ").lower().strip()
+    return repetir == "sim" or repetir == "s"
 
 while True:
-    linha = tratar_input(f"Jogador\033[1m{jogador_atual}\033[m: Escolha a linha (1, 2 ou 3): ", "linha")
-    coluna = tratar_input(f"Jogador \033[1m{jogador_atual}\033[m: Escolha a coluna (1, 2 ou 3): ", "coluna")
-
-    if jogar(tabuleiro, linha, coluna, jogador_atual):
-        imprimir_tabuleiro(tabuleiro)
-        vencedor = verificar_ganhador(tabuleiro)
-        if vencedor:
-            print(f"Parabéns, jogador \033[1m{vencedor.strip()}\033[m! Você ganhou!")
-            break
-        elif jogar_velha(tabuleiro):
-            print("iiiih deu velha!")
-            break
-        jogador_atual = 'O' if jogador_atual == 'X' else 'X'
+    if not jogo_da_velha():
+        print("Obrigado por jogar! Até a próxima!")
+        break
