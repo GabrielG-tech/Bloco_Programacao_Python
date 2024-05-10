@@ -1,19 +1,71 @@
 # Nivel 1 - Ex 2
 # Crie uma matriz 3x3 (lista de listas) que representa um tabuleiro de jogo da velha, inicialmente vazio, onde cada célula vazia é representada por um espaço em branco " " e imprima este tabuleiro. Em seguida, o código deve permitir à dois usuários adicionar 'X' ou 'O' em posições específicas e checar se um dos dois ganhou naquela jogada, antes do próximo jogador inserir a coordenada da sua jogada e informar se o resultado foi a vitória de um dos dois ou se deu “velha”.
 
-matriz = [
-    [" ", " ", " "],
-    [" ", " ", " "],
-    [" ", " ", " "]
-]
-
 def imprimir_tabuleiro(tabuleiro):
+    for i, linha in enumerate(tabuleiro):
+        print("|".join(linha))
+        if i != 2: 
+            print("-" * 3 + "+" + "-" * 3 + "+"+ "-" * 3)
+
+def verificar_ganhador(tabuleiro):
     for linha in tabuleiro:
-        print(" | ".join(linha))
-        print("-" * 10)
+        if linha[0] == linha[1] == linha[2] != "   ":
+            return linha[0]
 
-def criar_tabuleiro():
-    return [[" " for _ in range(3)] for _ in range(3)]
+    for coluna in range(3):
+        if tabuleiro[0][coluna] == tabuleiro[1][coluna] == tabuleiro[2][coluna] != "   ":
+            return tabuleiro[0][coluna]
 
-tabuleiro_vazio = criar_tabuleiro()
-imprimir_tabuleiro(tabuleiro_vazio)
+    if tabuleiro[0][0] == tabuleiro[1][1] == tabuleiro[2][2] != "   ":
+        return tabuleiro[0][0]
+    if tabuleiro[0][2] == tabuleiro[1][1] == tabuleiro[2][0] != "   ":
+        return tabuleiro[0][2]
+
+    return False
+
+def jogar(tabuleiro, linha, coluna, jogador):
+    if tabuleiro[linha][coluna] == "   ":
+        tabuleiro[linha][coluna] = " " + jogador + " "
+        return True
+    else:
+        print("Essa posição já está ocupada. Tente novamente.")
+        return False
+
+def jogar_velha(tabuleiro):
+    for linha in tabuleiro:
+        for celula in linha:
+            if celula == "   ":
+                return False
+    return True
+
+def tratar_input(mensagem, nome):
+    while True:
+        try:
+            posicao = int(input(mensagem)) - 1
+            if posicao in [0, 1, 2]:
+                return posicao
+            else:
+                print("Valor inserido está incorreto, tente novamente.")
+        except ValueError:
+            print("Valor inserido deve ser um número, tente novamente.")
+
+# Inicia o tabuleiro
+tabuleiro = [["   " for _ in range(3)] for _ in range(3)]
+imprimir_tabuleiro(tabuleiro)
+
+jogador_atual = 'X'
+
+while True:
+    linha = tratar_input(f"Jogador\033[1m{jogador_atual}\033[m: Escolha a linha (1, 2 ou 3): ", "linha")
+    coluna = tratar_input(f"Jogador \033[1m{jogador_atual}\033[m: Escolha a coluna (1, 2 ou 3): ", "coluna")
+
+    if jogar(tabuleiro, linha, coluna, jogador_atual):
+        imprimir_tabuleiro(tabuleiro)
+        vencedor = verificar_ganhador(tabuleiro)
+        if vencedor:
+            print(f"Parabéns, jogador \033[1m{vencedor.strip()}\033[m! Você ganhou!")
+            break
+        elif jogar_velha(tabuleiro):
+            print("iiiih deu velha!")
+            break
+        jogador_atual = 'O' if jogador_atual == 'X' else 'X'
