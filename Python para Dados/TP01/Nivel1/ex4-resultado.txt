@@ -1,0 +1,17 @@
+Número de palavras distintas: 16
+la: 5
+teste: 3
+e: 2
+olá: 1
+meu: 1
+nome: 1
+é: 1
+gabriel: 1
+eu: 1
+quero: 1
+ser: 1
+um: 1
+analista: 1
+desenvolvedor: 1
+de: 1
+sistemas: 1

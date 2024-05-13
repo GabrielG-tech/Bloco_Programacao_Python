@@ -1,0 +1,22 @@
+{
+    "1": {
+        "nome": "Gabriel",
+        "idade": 20,
+        "email": "gabriel@gamil.com"
+    },
+    "2": {
+        "nome": "Jo\u00e3o",
+        "idade": 30,
+        "email": "joao@email.com"
+    },
+    "3": {
+        "nome": "Maria",
+        "idade": 25,
+        "email": "maria@email.com"
+    },
+    "4": {
+        "nome": "Pedro",
+        "idade": 41,
+        "email": "pedrinho@outlook.com"
+    }
+}
