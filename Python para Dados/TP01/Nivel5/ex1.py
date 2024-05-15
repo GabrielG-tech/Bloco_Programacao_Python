@@ -1,0 +1,3 @@
+# Nivel 5 - Ex 1
+# Filtragem em Listas de Dicionários com Mais de uma Condição: Crie um programa que dada uma lista de dicionários representando informações de produtos (exemplo: {"nome": "caneta", "preço": 1.50, "estoque": 200}, {“nome” : “lápis, “preço” : 0.80, “estoque”: 47}, …), filtre e mostre produtos com preço acima de R$60 e em estoque acima de 50 unidades e gere uma lista de dicionários chamada “ProdutosEmPromocao” que deverá conter os itens filtrados porém o campo preço deverá conter uma tupla onde o primeiro item é o preço anterior e o segundo item o novo preço com um desconto de 20%.
+
