@@ -10,7 +10,7 @@
 import pandas as pd
 
 # Carregar os dados em um DataFrame
-PATH = 'C:\\Users\\gabriel.gsouza\\Documents\\Bloco_Programacao_Python\\dataSujo.csv'
+PATH = 'C:\\Users\\gabriel.gsouza\\Documents\\Bloco_Programacao_Python\\Exemplos\\dataSujo.csv'
 df = pd.read_csv(PATH)
 
 df.head() # 5 primeiros valores
