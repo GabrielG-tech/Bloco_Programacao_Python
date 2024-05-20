@@ -11,12 +11,14 @@ def centralizar_janela(janela, largura=300, altura=350):
 
 def sudoku_janela():
     nova_janela = Toplevel(root)
-    centralizar_janela(nova_janela, 400, 400)
+    centralizar_janela(nova_janela, 305, 360)
     nova_janela.title("Sudoku")
     
     # Criando um frame para os widgets
     frame = Frame(nova_janela, bg="green")
     frame.pack(expand=True, fill=BOTH)
+    
+    tabuleiro = [[" " for _ in range(3)] for _ in range(3)]
 
     # Entry para o Sudoku
     quadradoEntry = Entry(frame, width=5, font=("Verdana", 20))
@@ -24,12 +26,12 @@ def sudoku_janela():
 
 def jogo_da_velha_janela():
     nova_janela = Toplevel(root)
-    centralizar_janela(nova_janela, 400, 420)
+    centralizar_janela(nova_janela, 305, 360)
     nova_janela.title("Jogo da Velha")
     
     # Criando um frame para os widgets
-    frame = Frame(nova_janela, bg="gray")
-    frame.pack(pady=10)
+    frame = Frame(nova_janela, bg="black")
+    frame.pack(pady=5)
 
     # Variáveis globais para o Jogo da Velha
     global jogador_atual, tabuleiro
