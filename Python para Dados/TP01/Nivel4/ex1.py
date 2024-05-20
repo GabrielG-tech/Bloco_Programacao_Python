@@ -16,3 +16,4 @@ quantidade_minima = 20
 dicionario_atualizado = remover_itens_com_pouco_estoque(dicionario, quantidade_minima)
 
 print(f"Produtos com estoque a cima de {quantidade_minima}:\n {dicionario_atualizado}")
+
