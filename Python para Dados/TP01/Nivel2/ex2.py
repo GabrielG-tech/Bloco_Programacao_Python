@@ -14,5 +14,3 @@ def ler_arquivo(nome_arquivo):
 
 nome_do_arquivo = "Python para Dados\\TP01\\Nivel2\\ex2.csv"
 ler_arquivo(nome_do_arquivo)
-
-

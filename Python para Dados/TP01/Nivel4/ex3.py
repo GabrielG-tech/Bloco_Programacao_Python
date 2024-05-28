@@ -9,5 +9,3 @@ print("Somente números impares:", impares)
 
 resultado = {num + 5 for num in impares}
 print("Set resultante: ", resultado)
-
-
