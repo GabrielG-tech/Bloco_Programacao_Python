@@ -1,52 +1,70 @@
 # Nivel 5 - Ex 2
 # Dicionários Aninhados: Implemente um programa que manipule um dicionário contendo informações de alunos, onde cada aluno (chave) tem um dicionário com informações das notas em 4 disciplinas que serão inseridas pelo usuário. Quando o programa for encerrado, ele deverá ter gerado dois arquivos, um arquivo com nome “aprovados” e outro com o nome “recuperação” que deverão conter os nomes dos alunos que tiverem média acima ou igual a 6 e os nomes dos alunos com média abaixo de 6, respectivamente.
+
+def inserir_dados_alunos():
+    alunos = {}
     
-# Função para calcular a média das notas
+    # Pergunta o nome das disciplinas uma vez e reaproveita para os demais alunos
+    disciplinas = []
+    for i in range(4):
+        while True:
+            try:
+                disciplina = input(f"Digite o nome da disciplina {i+1}: ").strip().capitalize()
+                if not disciplina.isalpha():
+                    raise ValueError("O nome da disciplina deve conter apenas letras.")
+                disciplinas.append(disciplina)
+                break
+            except ValueError as e:
+                print(e)
+    
+    while True:
+        nome = input("Digite o nome do aluno (ou 'sair' para terminar): ").strip().capitalize()
+        if nome.lower() == 'sair':
+            break
+        if not nome.isalpha():
+            print("O nome do aluno deve conter apenas letras.")
+            continue
+        notas = {}
+        for disciplina in disciplinas:
+            while True:
+                try:
+                    nota = float(input(f"Digite a nota de {nome} em {disciplina}: ").strip())
+                    if nota < 0 or nota > 10:
+                        raise ValueError("A nota deve estar entre 0 e 10.")
+                    notas[disciplina] = nota
+                    break
+                except ValueError as e:
+                    print(e)
+        alunos[nome] = notas
+    return alunos
+
 def calcular_media(notas):
-    return sum(notas) / len(notas)
+    return sum(notas.values()) / len(notas)
 
-# Dicionário para armazenar as informações dos alunos
-alunos = {}
+def classificar_alunos(alunos):
+    aprovados = []
+    recuperacao = []
+    for aluno, notas in alunos.items():
+        media = calcular_media(notas)
+        if media >= 6:
+            aprovados.append(aluno)
+        else:
+            recuperacao.append(aluno)
+    return aprovados, recuperacao
 
-while True:
-    nome = input("Digite o nome do aluno (ou 'sair' para finalizar): ")
-    if nome.lower() == 'sair':
-        break
+def salvar_arquivos(aprovados, recuperacao):
+    aprovados_path = "Python para Dados/TP01/Nivel5/aprovados.txt"
+    recuperacao_path = "Python para Dados/TP01/Nivel5/recuperacao.txt"
+
+    with open(aprovados_path, "w", encoding='utf-8') as aprovados_file:
+        for aluno in aprovados:
+            aprovados_file.write(f"{aluno}\n")
     
-    # Inicializar o dicionário das disciplinas
-    disciplinas = ['Matemática', 'Português', 'História', 'Ciências']
-    notas = []
-    
-    # Coletar as notas das disciplinas
-    for disciplina in disciplinas:
-        nota = float(input(f"Digite a nota de {disciplina} para {nome}: "))
-        notas.append(nota)
-    
-    # Armazenar as informações do aluno no dicionário
-    alunos[nome] = {
-        'notas': notas,
-        'media': calcular_media(notas)
-    }
+    with open(recuperacao_path, "w", encoding='utf-8') as recuperacao_file:
+        for aluno in recuperacao:
+            recuperacao_file.write(f"{aluno}\n")
 
-# Listas para armazenar os nomes dos alunos aprovados e em recuperação
-aprovados = []
-recuperacao = []
-
-# Classificar os alunos com base na média
-for nome, info in alunos.items():
-    if info['media'] >= 6:
-        aprovados.append(nome)
-    else:
-        recuperacao.append(nome)
-
-# Gravar os resultados nos arquivos
-with open('aprovados.txt', 'w') as file_aprovados:
-    for aluno in aprovados:
-        file_aprovados.write(f"{aluno}\n")
-
-with open('recuperacao.txt', 'w') as file_recuperacao:
-    for aluno in recuperacao:
-        file_recuperacao.write(f"{aluno}\n")
-
-print("Processo concluído. Verifique os arquivos 'aprovados.txt' e 'recuperacao.txt'.")
-
+alunos = inserir_dados_alunos()
+aprovados, recuperacao = classificar_alunos(alunos)
+salvar_arquivos(aprovados, recuperacao)
+print("Dados salvos nos arquivos 'aprovados.txt' e 'recuperacao.txt'.")

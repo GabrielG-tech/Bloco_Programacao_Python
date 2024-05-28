@@ -4,11 +4,10 @@
 # pip install pandas
 import pandas as pd
 
-# Função para ler o arquivo CSV e calcular as estatísticas
+# ler o arquivo CSV e calcular as estatísticas
 def calcular_estatisticas(arquivo_csv):
     dados = pd.read_csv(arquivo_csv)
     
-    # Seleciona apenas as colunas numéricas
     colunas_numericas = dados.select_dtypes(include='number')
     
     # Calcula a média, mediana e desvio padrão para cada coluna numérica
