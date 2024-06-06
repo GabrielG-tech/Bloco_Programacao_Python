@@ -8,3 +8,4 @@ def contar_nomes(nomes):
 
 nomes = ["João", "Maria", "João", "Pedro", "Maria", "João", "Ana"]
 print(contar_nomes(nomes))  # Saída: {'João': 3, 'Maria': 2}
+
