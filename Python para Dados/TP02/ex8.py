@@ -1,0 +1,2 @@
+# Baixe o código do link e execute ele para obter um arquivo fictício de log. Escreva um script que processe esse arquivo de log gerado, tratando-o como um arquivo grande. Crie uma função que filtre as mensagens de erro especificadas no log e salve o timestamp dos erros em um novo arquivo para análise posterior. Crie uma outra função que explore o arquivo log e crie uma lista dos IPs que logaram no sistema e salve em um arquivo ordenado do IP que mais acessou para o IP que menos acessou, registrando a quantidade de loggins logins realizados pelo IP.
+
