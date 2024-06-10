@@ -1,0 +1,20 @@
+[
+    {
+        "titulo":"Filme 1",
+        "genero":"A\u00e7\u00e3o",
+        "ano_lancamento":2020,
+        "duracao":120
+    },
+    {
+        "titulo":"Filme 2",
+        "genero":"Com\u00e9dia",
+        "ano_lancamento":2019,
+        "duracao":90
+    },
+    {
+        "titulo":"Filme 3",
+        "genero":"Drama",
+        "ano_lancamento":2018,
+        "duracao":110
+    }
+]
