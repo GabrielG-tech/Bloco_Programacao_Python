@@ -13,11 +13,9 @@ df = pd.DataFrame(data)
 # Converte o DataFrame para JSON:
 df_json = df.to_json(orient='records', indent=4) # lista de dicionários
 
-# Escrever JSON:
 with open('Python para Dados\\TP02\\ex6.json', 'w', encoding='utf-8') as f:
     f.write(df_json)
 
-# Carrega JSON:
 with open('Python para Dados\\TP02\\ex6.json', 'r', encoding='utf-8') as f:
     df_loaded = pd.read_json(f)
 
