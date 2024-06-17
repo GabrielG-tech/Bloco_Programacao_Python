@@ -38,6 +38,7 @@ PATH_OUTPUT_SPLIT = PATH + 'ex01_data_split.json'
 #     ])
 #     conn.commit()
 #     conn.close()
+# criarBanco()
 
 try:
     # Criação da engine de conexão com o banco de dados SQLite
