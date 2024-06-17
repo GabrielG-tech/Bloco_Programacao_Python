@@ -10,10 +10,6 @@ DB_PATH = PATH + 'ex01_banco.db'
 PATH_OUTPUT_RECORDS = PATH + 'ex01_data_records.json'
 PATH_OUTPUT_SPLIT = PATH + 'ex01_data_split.json'
 
-# Definição do caminho do banco de dados
-PATH = 'Python para Dados\\TP03\\Parte 1\\'
-DATABASE_PATH = PATH + 'ex01_banco.db'
-
 # def criarBanco():
 #     # Criação do banco de dados e conexão
 #     conn = sqlite3.connect(DATABASE_PATH)
@@ -42,6 +38,7 @@ DATABASE_PATH = PATH + 'ex01_banco.db'
 #     ])
 #     conn.commit()
 #     conn.close()
+# criarBanco()
 
 try:
     # Criação da engine de conexão com o banco de dados SQLite
