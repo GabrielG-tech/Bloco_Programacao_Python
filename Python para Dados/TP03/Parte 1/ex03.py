@@ -15,9 +15,9 @@ print(df.info())
 print("\nValores nulos por coluna:")
 print(df.isnull().sum())
 
-# fazer limpagem dos dados
+# fazer limpagem dos dados (casos de celulas vazias, celulas preenchidas com tipo de dado errado...)
 
-OUTPUT_PATH_EXCEL = 'Python para Dados\\TP03\\Parte 1\\dadoLimpoTP3.xlsx'
-df.to_excel(OUTPUT_PATH_EXCEL, index=False)
+# OUTPUT_PATH_EXCEL = 'Python para Dados\\TP03\\Parte 1\\dadoLimpoTP3.xlsx'
+# df.to_excel(OUTPUT_PATH_EXCEL, index=False)
 
-print(f"\nDataFrame limpo exportado para {OUTPUT_PATH_EXCEL}")
+# print(f"\nDataFrame limpo exportado para {OUTPUT_PATH_EXCEL}")

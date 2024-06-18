@@ -12,7 +12,7 @@ PATH_OUTPUT_SPLIT = PATH + 'ex01_data_split.json'
 
 # def criarBanco():
 #     # Criação do banco de dados e conexão
-#     conn = sqlite3.connect(DATABASE_PATH)
+#     conn = sqlite3.connect(DB_PATH)
 #     cursor = conn.cursor()
 
 #     # Criação da tabela 'data'
@@ -41,16 +41,13 @@ PATH_OUTPUT_SPLIT = PATH + 'ex01_data_split.json'
 # criarBanco()
 
 try:
-    # Criação da engine de conexão com o banco de dados SQLite
     engine = create_engine(f'sqlite:///{DB_PATH}')
 
     # Carregamento dos dados da tabela 'data' para um DataFrame
     df = pd.read_sql_table('data', con=engine)
 
-    # Exportação dos dados em orientação 'records'
     df.to_json(PATH_OUTPUT_RECORDS, orient='records', indent=4)
 
-    # Exportação dos dados em orientação 'split'
     df.to_json(PATH_OUTPUT_SPLIT, orient='split', indent=4)
 
     print("Exportação concluída com sucesso.")
