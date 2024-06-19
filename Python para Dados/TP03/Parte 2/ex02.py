@@ -6,6 +6,18 @@ class ErroNumeroNegativo(Exception):
         super().__init__(self.message)
 
 def filtrar_pares_positivos(lista):
+    """
+    Filtra uma lista de números para retornar apenas os números pares e positivos.
+
+    Args:
+        lista: Lista contendo números inteiros.
+
+    Returns:
+        lista: Lista contendo apenas os números pares e positivos da lista de entrada.
+
+    Raises:
+        ErroNumeroNegativo: Se um número negativo for encontrado na lista, uma exceção é lançada indicando o número negativo encontrado e a execução é interrompida.
+    """
     numeros_filtrados = []
     for num in lista:
         if num < 0:

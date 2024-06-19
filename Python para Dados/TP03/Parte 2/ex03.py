@@ -4,6 +4,9 @@ import yaml # pip install pyyaml
 import os
 
 def ler_configuracao():
+    """
+    Tenta abrir e ler um arquivo chamado "config.yaml", se o arquivo não for encontrado, ele é criado com um conteúdo padrão ("config: default")
+    """
     arquivo_config = 'config.yaml'
     PATH = "Python para Dados\\TP03\\Parte 2\\" + arquivo_config
 
@@ -15,7 +18,7 @@ def ler_configuracao():
             except yaml.YAMLError as e:
                 print(f"Erro ao ler o arquivo {PATH}: {e}")
     else:
-        # Se o arquivo não existir é criado com um conteúdo padrão
+        # se o arquivo não existir é criado com um conteúdo padrão
         configuracoes = {'config': 'default'}
         with open(PATH, 'w') as file:
             yaml.safe_dump(configuracoes, file)
