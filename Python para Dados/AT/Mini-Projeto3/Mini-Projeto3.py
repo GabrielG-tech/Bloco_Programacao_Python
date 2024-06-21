@@ -42,7 +42,7 @@ def jogos_especificos(df):
 
     jogos_especificos = [jogo for jogo, contagem in contador.items() if contagem == 1]
 
-    return jogos_especificos # Jogos que foram citados uma única vez
+    return jogos_especificos # lista de jogos que foram citados uma única vez
 
 def exportar_sqlite(db_path, jogos_separados, jogos_populares, jogos_especifico):
     try:

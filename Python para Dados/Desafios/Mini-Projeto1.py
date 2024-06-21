@@ -17,8 +17,6 @@ urls = {
 
 def obter_tabelas_da_wikipedia(url):
     """
-    Faz uma requisição HTTP para uma URL da Wikipédia e retorna todas as tabelas com a classe 'wikitable'.
-
     Args:
         url (str): A URL da página da Wikipédia a ser acessada.
 
@@ -65,9 +63,7 @@ def analisar_tabela(tabela):
     for row in tabela.find_all('tr'):
         columns = row.find_all('td')
         if columns:
-            row_data = []
-            for column in columns:
-                row_data.append(column.text.strip())
+            row_data = [column.text.strip() for column in columns]
             rows.append(row_data)
     return headers, rows
 

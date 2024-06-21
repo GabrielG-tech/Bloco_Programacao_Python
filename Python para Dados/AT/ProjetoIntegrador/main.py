@@ -63,10 +63,8 @@ def exportar_dados(table, export_path):
     except Exception as e:
         print(f'Erro ao exportar dados da tabela {table}: {e}')
 
-
 PATH = 'Python para Dados\\AT\\ProjetoIntegrador\\'
 PATH_1 = 'Python para Dados\\AT\\Mini-Projeto1\\Arquivos_Exportados\\'
-
 PATH_2 = 'Python para Dados\\AT\\Mini-Projeto2\\usuarios-consolidados.xlsx'
 
 # Converter Excel para CSV e importar dados
@@ -94,12 +92,22 @@ print('Dados importados da tabela jogos_mercado_livre para jogos_mercado_livre c
 
 # Exportar dados para arquivos CSV
 export_paths_and_tables = [
-    # (f'{PATH}Arquivos_Exportados\\exported_consoles.csv', 'consoles'),
-    # (f'{PATH}Arquivos_Exportados\\exported_usuarios.csv', 'usuarios'),
-    # (f'{PATH}Arquivos_Exportados\\exported_usuario_console.csv', 'usuario_console'),
     (f'{PATH}Arquivos_Exportados\\exported_jogos_mercado_livre.csv', 'jogos_mercado_livre'),
     (f'{PATH}Arquivos_Exportados\\exported_jogos_preferidos.csv', 'jogos_preferidos'),
 ]
 
 for export_path, table_name in export_paths_and_tables:
     exportar_dados(table_name, export_path)
+
+# Recomendação dos 5 jogos mais baratos
+def recomendar_jogos_mais_baratos():
+    try:
+        jogos_mais_baratos = session.query(JogosMercadoLivre).order_by(JogosMercadoLivre.preco).limit(5).all()
+        print("Recomendação dos 5 jogos mais baratos são:")
+        for jogo in jogos_mais_baratos:
+            print(f"Nome: {jogo.nome}, Preço: R${jogo.preco:.2f}, Link: {jogo.permalink}")
+    except Exception as e:
+        print(f"Erro ao buscar os jogos mais baratos: {e}")
+
+# Chamando a função de recomendação dos 5 jogos mais baratos
+recomendar_jogos_mais_baratos()

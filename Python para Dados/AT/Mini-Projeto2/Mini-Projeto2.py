@@ -83,7 +83,7 @@ def consolidar_dados(csv_df, json_df, excel_df):
         df_consolidado = pd.concat([csv_df, json_df, excel_df], ignore_index=True)
 
         # Remover duplicatas após concatenar DFs
-        df_consolidado.drop('id', axis=1, inplace=True)
+        df_consolidado.drop('id', axis='columns', inplace=True)
         df_consolidado.drop_duplicates(inplace=True)
 
         # Substituir células vazias por "Não definido"
