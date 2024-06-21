@@ -47,22 +47,19 @@ def limpar_dados(df):
     try:
         df.drop_duplicates(inplace=True)
         df.fillna('', inplace=True)
-        # Verifica se a coluna 'data_nascimento' está presente
+
         if 'data_nascimento' in df.columns:
             # Aplica formatação da coluna de data de nascimento se necessário
             df['data_nascimento'] = df['data_nascimento'].apply(lambda x: formatar_data(str(x)))
             
-            # Preenche valores nulos com 'N/A'
-            df = df.fillna('N/A')
+            df = df.fillna('N/A') # Preenche valores nulos com 'N/A'
             
-            # Validar formato do email
-            df['email_valido'] = df['email'].apply(lambda x: validar_email(str(x)))
+            df['email_valido'] = df['email'].apply(lambda x: validar_email(str(x))) # Validar formato do email
             
-            # Remover registros com emails inválidos
-            df = df[df['email_valido'].notna()]
+            df = df[df['email_valido'].notna()] # Remover registros com emails inválidos
             
             # Remover duplicatas baseadas em Data de Nascimento, Email e ID, mantendo o primeiro com mais campos preenchidos
-            df['num_campos_preenchidos'] = df.apply(lambda x: x.count(), axis=1)
+            df['num_campos_preenchidos'] = df.apply(lambda x: x.count(), axis='columns')
             df = df.sort_values(by=['num_campos_preenchidos', 'id'], ascending=[False, True])
             df = df.drop_duplicates(subset=['data_nascimento', 'email', 'id'], keep='first')
             
@@ -126,14 +123,12 @@ def main():
         print("Erro ao consolidar os dados. Verifique os dados e tente novamente.")
         return
     
-    # Verificar duplicatas após a consolidação
+    # Analisar o número de duplicatas após a consolidação
     num_duplicatas = df_consolidado.duplicated(subset=['data_nascimento', 'email']).sum()
     if num_duplicatas > 0:
         print(f"Foram encontradas {num_duplicatas} duplicatas no DataFrame consolidado.")
         df_consolidado = df_consolidado.drop_duplicates(subset=['data_nascimento', 'email'], keep='first')
         print(f"Duplicatas removidas. Novo tamanho do DataFrame: {len(df_consolidado)}")
     
-    # Exportar DataFrame consolidado para o arquivo Excel
     exportar_excel(df_consolidado, 'Python para Dados\\AT\\Mini-Projeto2\\usuarios-consolidados.xlsx')
-
 main()

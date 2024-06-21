@@ -5,7 +5,6 @@ import collections
 EXCEL_PATH = 'Python para Dados\\AT\\Mini-Projeto2\\usuarios-consolidados.xlsx'
 DB_PATH = 'Python para Dados\\AT\\Mini-Projeto3\\banco_de_dados.sqlite'
 
-# Função para ler o arquivo Excel
 def ler_arquivo_excel(caminho):
     try:
         df = pd.read_excel(caminho)
@@ -45,7 +44,6 @@ def jogos_especificos(df):
 
     return jogos_especificos # Jogos que foram citados uma única vez
 
-# Função para exportar dados para um banco de dados SQLite
 def exportar_sqlite(db_path, jogos_separados, jogos_populares, jogos_especifico):
     try:
         engine = create_engine(f'sqlite:///{db_path}')

@@ -104,13 +104,6 @@ def limpar_dados(headers, linhas):
     return df
 
 def exportar_dados(df, nome):
-    """
-    Exporta os dados do DataFrame para arquivos CSV, JSON e Excel.
-
-    Args:
-        df (DataFrame): O DataFrame a ser exportado.
-        nome (str): Nome base para os arquivos exportados.
-    """
     df.to_csv(f'{PATH}{nome}.csv', index=False, encoding='utf-8')
     df.to_json(f'{PATH}{nome}.json', orient='records', lines=True, encoding='utf-8')
     df.to_excel(f'{PATH}{nome}.xlsx', index=False, encoding='utf-8')
