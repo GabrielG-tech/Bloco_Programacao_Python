@@ -30,17 +30,16 @@ if response.status_code == 200:
     for linha in tabela.find_all('tr')[2:]:
         linha_valor = []
         for td in linha.find_all(['th', 'td']):
-            linha_valor.append(td.text.strip() or '-')
+            linha_valor.append(td.text.strip() or 'Não definido')
         linhas.append(linha_valor[:-2])
 
     # Converte os dados em um DataFrame do pandas
     df = pd.DataFrame(linhas, columns=cabecalhos)
 
-    # Faz a checagem e limpeza dos dados
-    df.dropna(inplace=True)  # Remove linhas com valores nulos
-    df.drop_duplicates(inplace=True)  # Remove linhas duplicadas
+    df.dropna(inplace=True) 
+    df.drop_duplicates(inplace=True)  
+    df.replace("—", "Não definido", inplace=True)
 
-    # Exporta o DataFrame para um arquivo CSV
     df.to_csv(f'{PATH}ps5_jogos.csv', index=False)
 
 else:

@@ -14,7 +14,7 @@ def requisicao_url(url):
         return None
 
 def extrair_cabecalhos(tabela):
-    return [th.text.strip() for th in tabela.find_all('tr')[0].find_all('th')]
+    return [th.text.strip() for th in tabela.find_all('tr')[0].find_all('th')][:-1]
 
 def extrair_linhas(tabela):
     linhas = []

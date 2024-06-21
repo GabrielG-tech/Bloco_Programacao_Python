@@ -22,7 +22,7 @@ if resposta.status_code == 200:
     linhas = []
 
     for linha in tabela.find_all('tr')[1:]:
-        valores_linha = [td.text.strip() or '-' for td in linha.find_all('td')[:-3]]
+        valores_linha = [td.text.strip() or 'Não definido' for td in linha.find_all('td')[:-3]]
         linhas.append(valores_linha)
 
     # Converte os dados em um DataFrame do pandas
@@ -30,6 +30,7 @@ if resposta.status_code == 200:
 
     df.dropna(inplace=True) 
     df.drop_duplicates(inplace=True)  
+    df.replace("—", "Não definido", inplace=True)
 
     # Exporta o DataFrame para um arquivo CSV
     df.to_csv(f'{PATH}xbox360_jogos.csv', index=False)

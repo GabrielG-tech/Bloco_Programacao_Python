@@ -1,7 +1,7 @@
 import json
 import re
 import pandas as pd
-from datetime import datetime
+import datetime
 
 # Caminho dos arquivos
 csv_file = 'Python para Dados\\AT\\Mini-Projeto2\\DadosAnalisados\\dadosAT.csv'
