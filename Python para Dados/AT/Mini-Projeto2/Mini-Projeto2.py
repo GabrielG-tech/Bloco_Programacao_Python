@@ -1,3 +1,4 @@
+import json
 import re
 import pandas as pd
 from datetime import datetime
@@ -10,13 +11,17 @@ excel_file = 'Python para Dados\\AT\\Mini-Projeto2\\DadosAnalisados\\dadosATAnti
 def ler_arquivos(csv_path, json_path, excel_path):
     try:
         df_csv = pd.read_csv(csv_path)
-        df_json = pd.read_json(json_path)
+
+        with open(json_path) as f:
+            json_data = json.load(f)
+        df_json = pd.DataFrame(json_data)
+
         df_excel = pd.read_excel(excel_path)
         return df_csv, df_json, df_excel
     except Exception as e:
         print(f"Erro ao ler arquivos: {e}")
         return None, None, None
-
+    
 def formatar_data(data):
     try:
         # Verifica se a data está no formato dd/mm/yyyy ou dd-mm-yyyy
@@ -35,11 +40,13 @@ def formatar_data(data):
 
 def validar_email(email):
     # Expressão regular para validar o formato do email
-    regex_email = r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$'
+    regex_email = r'[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+'
     return re.match(regex_email, email)
 
 def limpar_dados(df):
     try:
+        df.drop_duplicates(inplace=True)
+        df.fillna('', inplace=True)
         # Verifica se a coluna 'data_nascimento' está presente
         if 'data_nascimento' in df.columns:
             # Aplica formatação da coluna de data de nascimento se necessário
@@ -74,19 +81,24 @@ def limpar_dados(df):
         print(f"Erro ao limpar dados: {e}")
         return None
 
-def consolidar_dados(dfs):
+def consolidar_dados(csv_df, json_df, excel_df):
     try:
-        df_consolidado = pd.concat(dfs, ignore_index=True)
+        df_consolidado = pd.concat([csv_df, json_df, excel_df], ignore_index=True)
+
+        # Remover duplicatas após concatenar DFs
+        df_consolidado.drop('id', axis=1, inplace=True)
+        df_consolidado.drop_duplicates(inplace=True)
+
+        # Substituir células vazias por "Não definido"
+        df_consolidado.replace('', 'Não definido', inplace=True)
+
         return df_consolidado
     except Exception as e:
-        print(f"Erro ao consolidar dados: {e}")
+        print(f"Erro ao consolidar DataFrames: {e}")
         return None
 
 def exportar_excel(df, output_path):
-    try:
-        # Substituir 'N/A' por valor desejado antes de exportar
-        df.replace('N/A', 'Valor Padrão', inplace=True)
-        
+    try:        
         df.to_excel(output_path, index=False)
         print(f"Dados exportados para {output_path} com sucesso!")
     except Exception as e:
@@ -108,7 +120,7 @@ def main():
         return
     
     # Consolidar todos os DataFrames em um único DataFrame
-    df_consolidado = consolidar_dados([df_csv, df_json, df_excel])
+    df_consolidado = consolidar_dados(df_csv, df_json, df_excel)
     
     if df_consolidado is None:
         print("Erro ao consolidar os dados. Verifique os dados e tente novamente.")
