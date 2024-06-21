@@ -3,65 +3,65 @@ import pandas as pd
 import time
 import sqlite3
 from sqlalchemy import create_engine
+# import sqlalchemy as db
 
-PATH_GAMES = 'Python para Dados\\AT\\Mini-Projeto4\\lista_de_jogos.txt' 
+PATH = 'Python para Dados\\AT\\Mini-Projeto3\\banco_de_dados.sqlite' 
 DB_PATH = 'Python para Dados\\AT\\Mini-Projeto4\\jogos_mercado_livre.db'
 
-# Função para ler a lista de jogos de um arquivo
-def ler_lista_de_jogos(PATH_GAMES):
-    try:
-        with open(PATH_GAMES, 'r') as file:
-            jogos = file.read().splitlines()
-        return jogos
-    except Exception as e:
-        print(f"Erro ao ler o arquivo: {e}")
-        return []
+def conectar_banco_de_dados(db_path, path):
+    engine = create_engine(f'sqlite:///{db_path}')
+    conn = sqlite3.connect(path)
+    cursor = conn.cursor()
+    return engine, conn, cursor
 
-# Função para consultar a API do Mercado Livre
-def consultar_api_mercado_livre(jogo):
-    url = f"https://api.mercadolibre.com/sites/MLB/search?category=MLB186456&q={jogo}"
+def ler_jogos_separados(cursor):
+    cursor.execute('SELECT Jogo FROM jogos_separados')
+    jogos_separados = [row[0] for row in cursor.fetchall()]
+    return jogos_separados
+
+def API_consulta(jogo):
+    """
+    Consulta a API do Mercado Livre para obter informações do jogo.
+    """
+    url = f'https://api.mercadolibre.com/sites/MLB/search?category=MLB186456&q={jogo.replace(" ", "%20")}'
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.json()['results']
+
+def processar_resultados(resultados, df):
+    """
+    Processa os resultados da consulta à API e adiciona ao DataFrame.
+    """
+    for result in resultados:
+        nome = result['title']
+        preco = result['price']
+        permalink = result['permalink']
+        df.loc[len(df)] = [nome, preco, permalink]
+
+def exportar_para_banco_de_dados(df, engine):
+    """
+    Exporta o DataFrame para o banco de dados SQLite.
+    """
+    df.to_sql('jogos_mercado_livre', engine, if_exists='replace', index=False)
+
+engine, conn, cursor = conectar_banco_de_dados(DB_PATH, PATH)
+jogos_separados = ler_jogos_separados(cursor)
+
+# Criar um DataFrame para armazenar os dados
+df = pd.DataFrame(columns=['nome', 'preco', 'permalink'])
+
+for jogo in jogos_separados:
     try:
-        response = requests.get(url)
-        response.raise_for_status()
-        dados = response.json()
-        return dados
+        resultados = API_consulta(jogo)
+        processar_resultados(resultados, df)
+        time.sleep(1) # evitar problema com API
     except requests.exceptions.RequestException as e:
-        print(f"Erro ao consultar a API para o jogo {jogo}: {e}")
-        return None
-
-# Função para extrair informações relevantes da resposta da API
-def extrair_informacoes(dados):
-    if dados and 'results' in dados:
-        informacoes = []
-        for item in dados['results']:
-            nome = item.get('title')
-            preco = item.get('price')
-            permalink = item.get('permalink')
-            informacoes.append((nome, preco, permalink))
-        return informacoes
-    else:
-        return []
-
-# Função para salvar os dados em um banco de dados SQL
-def salvar_em_banco_de_dados(dados, DB_PATH):
-    try:
-        engine = create_engine(f'sqlite:///{DB_PATH}')
-        df = pd.DataFrame(dados, columns=['Nome', 'Preço', 'Permalink'])
-        df.to_sql('jogos', con=engine, if_exists='replace', index=False)
-        print(f"Dados salvos com sucesso no banco de dados {DB_PATH}")
+        print(f'Erro ao consultar a API: {e}')
     except Exception as e:
-        print(f"Erro ao salvar os dados no banco de dados: {e}")
+        print(f'Erro ao processar a resposta: {e}')
 
-jogos = ler_lista_de_jogos(PATH_GAMES)
+# Exportar o DataFrame para o banco de dados
+exportar_para_banco_de_dados(df, engine)
 
-todos_os_dados = []
-for jogo in jogos:
-    dados = consultar_api_mercado_livre(jogo)
-    informacoes = extrair_informacoes(dados)
-    todos_os_dados.extend(informacoes)
-    time.sleep(1)  # Atraso entre as consultas para respeitar os limites de taxa da API
-
-if todos_os_dados:
-    salvar_em_banco_de_dados(todos_os_dados, DB_PATH)
-else:
-    print("Nenhum dado foi extraído.")
+# Fechar a conexão com o banco de dados
+conn.close()

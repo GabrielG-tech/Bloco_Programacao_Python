@@ -1,87 +1,72 @@
 import pandas as pd
-import sqlite3
 from sqlalchemy import create_engine
+import collections
 
-PATH = 'Python para Dados\\AT\\Mini-Projeto3\\consolidado_jogos.xlsx'
+EXCEL_PATH = 'Python para Dados\\AT\\Mini-Projeto2\\usuarios-consolidados.xlsx'
 DB_PATH = 'Python para Dados\\AT\\Mini-Projeto3\\banco_de_dados.sqlite'
 
 # Função para ler o arquivo Excel
-def read_excel_file(PATH):
+def ler_arquivo_excel(caminho):
     try:
-        df = pd.read_excel(PATH)
+        df = pd.read_excel(caminho)
         return df
     except Exception as e:
         print(f"Erro ao ler o arquivo Excel: {e}")
         return None
 
-# Função para realizar operações com sets
-def analyze_games(df):
-    try:
-        user_games = {}
-        
-        for index, row in df.iterrows():
-            user = row['Usuário']
-            games = row['Jogos'].split(',')
-            games = [game.strip() for game in games]
-            
-            if user not in user_games:
-                user_games[user] = set(games)
-            else:
-                user_games[user].update(games)
-        
-        all_games = set()
-        unique_games = set()
-        more_than_once_games = set()
-        
-        game_count = {}
-        
-        for games in user_games.values():
-            all_games.update(games)
-            for game in games:
-                if game in game_count:
-                    game_count[game] += 1
-                    if game_count[game] == 2:
-                        more_than_once_games.add(game)
-                        unique_games.discard(game)
-                else:
-                    game_count[game] = 1
-                    unique_games.add(game)
-        
-        return all_games, unique_games, more_than_once_games
+def jogos_separados(df):
+    jogos = set()
+    for row in df['jogos_preferidos']:
+        jogos.update(row.split('|'))
+    return jogos # lista com todos os jogos separados
+
+def jogos_populares(df):
+    jogos = set()
+    for row in df['jogos_preferidos']:
+        jogos.update(row.split('|'))
     
-    except Exception as e:
-        print(f"Erro ao processar os jogos: {e}")
-        return None, None, None
+    contador = collections.Counter()
+    for row in df['jogos_preferidos']:
+        contador.update(row.split('|'))
+    
+    jogos_populares = contador.most_common(5) # Retorna os 5 jogos mais comuns
+    return jogos_populares
+
+def jogos_especificos(df):
+    jogos = set()
+    for row in df['jogos_preferidos']:
+        jogos.update(row.split('|'))
+    
+    contador = collections.Counter()
+    for row in df['jogos_preferidos']:
+        contador.update(row.split('|'))
+
+    jogos_especificos = [jogo for jogo, contagem in contador.items() if contagem == 1]
+
+    return jogos_especificos # Jogos que foram citados uma única vez
 
 # Função para exportar dados para um banco de dados SQLite
-def export_to_sqlite(data, DB_PATH):
+def exportar_sqlite(db_path, jogos_separados, jogos_populares, jogos_especifico):
     try:
-        engine = create_engine(f'sqlite:///{DB_PATH}')
+        engine = create_engine(f'sqlite:///{db_path}')
         conn = engine.connect()
         
-        data.to_sql('games_analysis', conn, if_exists='replace', index=False)
+        pd.DataFrame(list(jogos_separados), columns=['Jogo']).to_sql('jogos_separados', engine, if_exists='replace', index=False)
+
+        pd.DataFrame(list(jogos_populares), columns=['Jogo', 'Quantidade']).to_sql('jogos_populares', engine, if_exists='replace', index=False)
+
+        pd.DataFrame(list(jogos_especifico), columns=['Jogo']).to_sql('jogos_especifico', engine, if_exists='replace', index=False)
+
+        print(f"Dados exportados com sucesso no dados!")
         
-        conn.close()
     except Exception as e:
         print(f"Erro ao exportar os dados para o banco de dados SQLite: {e}")
+    conn.close()
 
+df = ler_arquivo_excel(EXCEL_PATH)
 
-df = read_excel_file(PATH)
-if df is not None:
-    all_games, unique_games, more_than_once_games = analyze_games(df)
-    
-    if all_games is not None and unique_games is not None and more_than_once_games is not None:
-        data = {
-            'All Games': list(all_games),
-            'Unique Games': list(unique_games),
-            'More Than Once Games': list(more_than_once_games)
-        }
-        
-        df_export = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in data.items()]))
-        
-        export_to_sqlite(df_export, DB_PATH)
-    else:
-        print("Erro ao analisar os jogos.")
-else:
-    print("Erro ao ler o arquivo Excel.")
+separados = jogos_separados(df)
+populares = jogos_populares(df)
+especifico = jogos_especificos(df)
 
+exportar_sqlite(DB_PATH, separados, populares, especifico)
