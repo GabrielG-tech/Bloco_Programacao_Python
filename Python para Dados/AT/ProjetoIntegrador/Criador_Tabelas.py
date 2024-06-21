@@ -28,12 +28,12 @@ class UsuarioConsole(Base):
     usuario = Column(Integer, ForeignKey('usuarios.id'))
     idConsole = Column(Integer, ForeignKey('consoles.id'))
 
-# class JogosMercadoLivre(Base):
-#     __tablename__ = 'jogos_mercado_livre'
-#     id = Column(Integer, primary_key=True)
-#     nome = Column(String)
-#     preco = Column(Float)
-#     permalink = Column(String)
+class JogosMercadoLivre(Base):
+    __tablename__ = 'jogos_mercado_livre'
+    id = Column(Integer, primary_key=True)
+    nome = Column(String)
+    preco = Column(Float)
+    permalink = Column(String)
 
 class JogosPreferidos(Base):
     __tablename__ = 'jogos_preferidos'
