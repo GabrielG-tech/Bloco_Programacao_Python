@@ -7,6 +7,8 @@ PATH = 'Python para Dados\\AT\\Mini-Projeto1\\PlayStation4\\'
 
 def requisicao_url(url):
     response = requests.get(url)
+    response.raise_for_status()
+    
     if response.status_code == 200:
         return BeautifulSoup(response.text, 'html.parser')
     else:
