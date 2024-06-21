@@ -27,13 +27,15 @@ def obter_tabelas_da_wikipedia(url):
         list: Uma lista de objetos BeautifulSoup correspondentes às tabelas encontradas na página.
     """
     try:
-        resposta = requests.get(url, headers={'User-Agent': 'Googlebot'})
-        resposta.raise_for_status()  # Lança uma exceção para erros HTTP (4xx/5xx)
-        
-        conteudo = resposta.content
+        resposta = requests.get(url)
+
+        with request.urlopen(resposta) as response:
+            if response.status != 200:
+                raise Exception(f"Erro ao acessar a URL: {url}")
+            conteudo = response.read().decode('utf-8')
+            
         soup = BeautifulSoup(conteudo, 'html.parser')
         tabelas = soup.find_all('table', {'class': 'wikitable'})
-        
         return tabelas
     
     except requests.exceptions.HTTPError as errh:
@@ -47,14 +49,7 @@ def obter_tabelas_da_wikipedia(url):
     except Exception as e:
         print(f"Erro durante o processo de scraping: {e}")
         return None
-    # req = request.Request(url, headers={'User-Agent': 'Googlebot'})
-    # with request.urlopen(req) as response:
-    #     if response.status != 200:
-    #         raise Exception(f"Erro ao acessar a URL: {url}")
-    #     conteudo = response.read().decode('utf-8')
-    # soup = BeautifulSoup(conteudo, 'html.parser')
-    # tabelas = soup.find_all('table', {'class': 'wikitable'})
-    # return tabelas
+    
 
 def analisar_tabela(tabela):
     """

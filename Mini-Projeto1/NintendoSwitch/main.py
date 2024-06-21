@@ -29,7 +29,8 @@ if response.status_code == 200:
     df.drop_duplicates(inplace=True)  # Remove linhas duplicadas
 
     # Exporta o DataFrame para um arquivo CSV
-    df.to_csv('./Mini Projeto 1/NintendoSwitch/jogos.csv', index=False)
+    df.to_csv('Python para Dados\\AT\\Mini-Projeto1\\MiniProjeto1\\NintendoSwitch\\jogos.csv', index=False)
+    print("")
 
 else:
     print("Erro ao fazer a requisição:", response.status_code)
