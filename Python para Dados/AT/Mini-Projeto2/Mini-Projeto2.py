@@ -1,11 +1,13 @@
+import re
 import pandas as pd
+from datetime import datetime
 
 # Caminho dos arquivos
-csv_file = 'Python para Dados\AT\Mini-Projeto2\DadosAnalisados\dadosAT.csv'
-json_file = 'Python para Dados\AT\Mini-Projeto2\DadosAnalisados\dadosATAntigo.json'
-excel_file = 'Python para Dados\AT\Mini-Projeto2\DadosAnalisados\dadosATAntigo.xlsx'
+csv_file = 'Python para Dados\\AT\\Mini-Projeto2\\DadosAnalisados\\dadosAT.csv'
+json_file = 'Python para Dados\\AT\\Mini-Projeto2\\DadosAnalisados\\dadosATAntigo.json'
+excel_file = 'Python para Dados\\AT\\Mini-Projeto2\\DadosAnalisados\\dadosATAntigo.xlsx'
 
-def read_files(csv_path, json_path, excel_path):
+def ler_arquivos(csv_path, json_path, excel_path):
     try:
         df_csv = pd.read_csv(csv_path)
         df_json = pd.read_json(json_path)
@@ -15,54 +17,111 @@ def read_files(csv_path, json_path, excel_path):
         print(f"Erro ao ler arquivos: {e}")
         return None, None, None
 
-def clean_data(df):
+def formatar_data(data):
     try:
-        df = df.drop_duplicates()  # Remove duplicatas
-        df = df.fillna('N/A')  # Preenche valores nulos
-        return df
+        # Verifica se a data está no formato dd/mm/yyyy ou dd-mm-yyyy
+        if '/' in data:
+            data = data.replace('/', '-')
+        
+        # Verifica se a data está no formato dd-mm-yyyy
+        match = re.match(r'(\d{2})-(\d{2})-(\d{4})', data)
+        if match:
+            return f"{match.group(3)}-{match.group(2)}-{match.group(1)}"
+        else:
+            return data
+    except Exception as e:
+        print(f"Erro ao formatar data: {e}")
+        return data
+
+def validar_email(email):
+    # Expressão regular para validar o formato do email
+    regex_email = r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$'
+    return re.match(regex_email, email)
+
+def limpar_dados(df):
+    try:
+        # Verifica se a coluna 'data_nascimento' está presente
+        if 'data_nascimento' in df.columns:
+            # Aplica formatação da coluna de data de nascimento se necessário
+            df['data_nascimento'] = df['data_nascimento'].apply(lambda x: formatar_data(str(x)))
+            
+            # Preenche valores nulos com 'N/A'
+            df = df.fillna('N/A')
+            
+            # Validar formato do email
+            df['email_valido'] = df['email'].apply(lambda x: validar_email(str(x)))
+            
+            # Remover registros com emails inválidos
+            df = df[df['email_valido'].notna()]
+            
+            # Remover duplicatas baseadas em Data de Nascimento, Email e ID, mantendo o primeiro com mais campos preenchidos
+            df['num_campos_preenchidos'] = df.apply(lambda x: x.count(), axis=1)
+            df = df.sort_values(by=['num_campos_preenchidos', 'id'], ascending=[False, True])
+            df = df.drop_duplicates(subset=['data_nascimento', 'email', 'id'], keep='first')
+            
+            # Remover colunas auxiliares
+            df = df.drop(columns=['num_campos_preenchidos', 'email_valido'])
+            
+            # Ordenar por ID
+            df = df.sort_values(by='id')
+            
+            return df
+        else:
+            print("Coluna 'data_nascimento' não encontrada no DataFrame:")
+            print(df.head())  # Mostra as primeiras linhas do DataFrame para inspeção
+            return None
     except Exception as e:
         print(f"Erro ao limpar dados: {e}")
         return None
 
-def consolidate_data(dfs):
+def consolidar_dados(dfs):
     try:
-        consolidated_df = pd.concat(dfs, ignore_index=True)
-        return consolidated_df
+        df_consolidado = pd.concat(dfs, ignore_index=True)
+        return df_consolidado
     except Exception as e:
         print(f"Erro ao consolidar dados: {e}")
         return None
 
-def export_to_excel(df, output_path):
+def exportar_excel(df, output_path):
     try:
+        # Substituir 'N/A' por valor desejado antes de exportar
+        df.replace('N/A', 'Valor Padrão', inplace=True)
+        
         df.to_excel(output_path, index=False)
         print(f"Dados exportados para {output_path} com sucesso!")
     except Exception as e:
         print(f"Erro ao exportar dados para Excel: {e}")
 
 def main():
-    # Ler os arquivos
-    df_csv, df_json, df_excel = read_files(csv_file, json_file, excel_file)
+    df_csv, df_json, df_excel = ler_arquivos(csv_file, json_file, excel_file)
     
     if df_csv is None or df_json is None or df_excel is None:
         print("Erro ao ler os arquivos. Verifique os caminhos e tente novamente.")
         return
     
-    # Limpar os dados
-    df_csv = clean_data(df_csv)
-    df_json = clean_data(df_json)
-    df_excel = clean_data(df_excel)
+    df_csv = limpar_dados(df_csv)
+    df_json = limpar_dados(df_json)
+    df_excel = limpar_dados(df_excel)
     
     if df_csv is None or df_json is None or df_excel is None:
         print("Erro ao limpar os dados. Verifique os dados e tente novamente.")
         return
     
-    # Consolidar os dados
-    consolidated_df = consolidate_data([df_csv, df_json, df_excel])
+    # Consolidar todos os DataFrames em um único DataFrame
+    df_consolidado = consolidar_dados([df_csv, df_json, df_excel])
     
-    if consolidated_df is None:
+    if df_consolidado is None:
         print("Erro ao consolidar os dados. Verifique os dados e tente novamente.")
         return
     
-    # Exportar o DataFrame consolidado para um arquivo Excel
-    export_to_excel(consolidated_df, 'Python para Dados\AT\Mini-Projeto2\usuarios-consolidados.xlsx')
+    # Verificar duplicatas após a consolidação
+    num_duplicatas = df_consolidado.duplicated(subset=['data_nascimento', 'email']).sum()
+    if num_duplicatas > 0:
+        print(f"Foram encontradas {num_duplicatas} duplicatas no DataFrame consolidado.")
+        df_consolidado = df_consolidado.drop_duplicates(subset=['data_nascimento', 'email'], keep='first')
+        print(f"Duplicatas removidas. Novo tamanho do DataFrame: {len(df_consolidado)}")
+    
+    # Exportar DataFrame consolidado para o arquivo Excel
+    exportar_excel(df_consolidado, 'Python para Dados\\AT\\Mini-Projeto2\\usuarios-consolidados.xlsx')
+
 main()

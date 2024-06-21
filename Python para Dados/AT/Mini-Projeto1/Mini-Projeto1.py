@@ -1,5 +1,6 @@
 import time
 from urllib import request
+import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
@@ -25,14 +26,35 @@ def obter_tabelas_da_wikipedia(url):
     Returns:
         list: Uma lista de objetos BeautifulSoup correspondentes às tabelas encontradas na página.
     """
-    req = request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-    with request.urlopen(req) as response:
-        if response.status != 200:
-            raise Exception(f"Erro ao acessar a URL: {url}")
-        conteudo = response.read().decode('utf-8')
-    soup = BeautifulSoup(conteudo, 'html.parser')
-    tabelas = soup.find_all('table', {'class': 'wikitable'})
-    return tabelas
+    try:
+        resposta = requests.get(url, headers={'User-Agent': 'Googlebot'})
+        resposta.raise_for_status()  # Lança uma exceção para erros HTTP (4xx/5xx)
+        
+        conteudo = resposta.content
+        soup = BeautifulSoup(conteudo, 'html.parser')
+        tabelas = soup.find_all('table', {'class': 'wikitable'})
+        
+        return tabelas
+    
+    except requests.exceptions.HTTPError as errh:
+        print(f"Erro HTTP: {errh}")
+        return None
+    
+    except requests.exceptions.ConnectionError as errc:
+        print(f"Erro de conexão: {errc}")
+        return None
+    
+    except Exception as e:
+        print(f"Erro durante o processo de scraping: {e}")
+        return None
+    # req = request.Request(url, headers={'User-Agent': 'Googlebot'})
+    # with request.urlopen(req) as response:
+    #     if response.status != 200:
+    #         raise Exception(f"Erro ao acessar a URL: {url}")
+    #     conteudo = response.read().decode('utf-8')
+    # soup = BeautifulSoup(conteudo, 'html.parser')
+    # tabelas = soup.find_all('table', {'class': 'wikitable'})
+    # return tabelas
 
 def analisar_tabela(tabela):
     """
@@ -67,18 +89,18 @@ def limpar_dados(headers, linhas):
     df = pd.DataFrame(linhas, columns=headers)
     df = df.replace('\n', '', regex=True).replace('\r', '', regex=True)
 
-    # 1. Remover '#' do início dos títulos
+    # Remover '#' do início dos títulos
     df['Título'] = df['Título'].str.replace('^#', '', regex=True)
 
-    # 2. Substituir valores vazios por 'N/A'
-    df.fillna('N/A', inplace=True)
-
-    # 3. Formatar coluna de data para AAAA-MM-DD
+    # Formatar coluna de data para AAAA-MM-DD
     df['Lançamento'] = pd.to_datetime(df['Lançamento'], format='%d/%b/%Y', errors='coerce').dt.strftime('%Y-%m-%d')
 
-    # 4. Limpar campos numéricos como Observações (Obs.) e Referências (Ref.)
+    # Limpar campos numéricos como Observações (Obs.) e Referências (Ref.)
     df['Obs.'] = df['Obs.'].str.extract(r'\[(\d+)\]', expand=False)
     df['Ref.'] = df['Ref.'].str.extract(r'\[(\d+)\]', expand=False)
+    
+    # Substituir valores vazios por 'N/A'
+    df.fillna('N/A', inplace=True)
     return df
 
 def exportar_dados(df, nome):
