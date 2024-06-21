@@ -1,5 +1,4 @@
 import time
-from urllib import request
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -28,14 +27,11 @@ def obter_tabelas_da_wikipedia(url):
     """
     try:
         resposta = requests.get(url)
-
-        with request.urlopen(resposta) as response:
-            if response.status != 200:
-                raise Exception(f"Erro ao acessar a URL: {url}")
-            conteudo = response.read().decode('utf-8')
-            
-        soup = BeautifulSoup(conteudo, 'html.parser')
+        resposta.raise_for_status()  # Lança exceção para erros HTTP
+        soup = BeautifulSoup(resposta.text, 'html.parser')
         tabelas = soup.find_all('table', {'class': 'wikitable'})
+        if not tabelas:
+            raise Exception("Tabela com classe 'wikitable' não encontrada")
         return tabelas
     
     except requests.exceptions.HTTPError as errh:
@@ -61,14 +57,20 @@ def analisar_tabela(tabela):
     Returns:
         tuple: Uma tupla contendo a lista de cabeçalhos e a lista de linhas de dados.
     """
+    # Extrair os cabeçalhos da tabela
     headers = [header.text.strip() for header in tabela.find_all('th')]
-    linhas = []
-    for linha in tabela.find_all('tr')[1:]:
-        celulas = linha.find_all(['td', 'th'])
-        texto_celulas = [celula.text.strip() for celula in celulas]
-        if len(texto_celulas) == len(headers):
-            linhas.append(texto_celulas)
-    return headers, linhas
+
+    # Extrair os dados das linhas da tabela
+    rows = []
+    for row in tabela.find_all('tr'):
+        columns = row.find_all('td')
+        if columns:
+            row_data = []
+            for column in columns:
+                row_data.append(column.text.strip())
+            rows.append(row_data)
+    return headers, rows
+
 
 def limpar_dados(headers, linhas):
     """
@@ -84,27 +86,34 @@ def limpar_dados(headers, linhas):
     df = pd.DataFrame(linhas, columns=headers)
     df = df.replace('\n', '', regex=True).replace('\r', '', regex=True)
 
-    # Remover '#' do início dos títulos
-    df['Título'] = df['Título'].str.replace('^#', '', regex=True)
+    if 'Título' in df.columns:
+        df['Título'] = df['Título'].str.replace('^#', '', regex=True)
 
-    # Formatar coluna de data para AAAA-MM-DD
-    df['Lançamento'] = pd.to_datetime(df['Lançamento'], format='%d/%b/%Y', errors='coerce').dt.strftime('%Y-%m-%d')
+    if 'Lançamento' in df.columns:
+        df['Lançamento'] = pd.to_datetime(df['Lançamento'], format='%d/%b/%Y', errors='coerce').dt.strftime('%Y-%m-%d')
 
-    # Limpar campos numéricos como Observações (Obs.) e Referências (Ref.)
-    df['Obs.'] = df['Obs.'].str.extract(r'\[(\d+)\]', expand=False)
-    df['Ref.'] = df['Ref.'].str.extract(r'\[(\d+)\]', expand=False)
+    if 'Obs.' in df.columns:
+        df['Obs.'] = df['Obs.'].str.extract(r'\[(\d+)\]', expand=False)
+
+    if 'Ref.' in df.columns:
+        df['Ref.'] = df['Ref.'].str.extract(r'\[(\d+)\]', expand=False)
     
-    # Substituir valores vazios por 'N/A'
     df.fillna('N/A', inplace=True)
+    df.replace('', 'Não definido', inplace=True)
+    
     return df
 
 def exportar_dados(df, nome):
-    df.to_csv(f'{PATH}{nome}.csv', index=False, encoding='utf-8')
-    df.to_json(f'{PATH}{nome}.json', orient='records', lines=True, encoding='utf-8')
-    df.to_excel(f'{PATH}{nome}.xlsx', index=False, encoding='utf-8')
+    try:
+        df.to_csv(f'{PATH}{nome}.csv', index=False)
+        df.to_json(f'{PATH}{nome}.json', orient='records', lines=True)
+        df.to_excel(f'{PATH}{nome}.xlsx', index=False)
+        print(f"Dados de {nome} exportados com sucesso!")
+    except Exception as e:
+        print(f"Erro ao exportar dados de {nome}: {e}")
 
 # Extração, limpeza e exportação dos dados.
-# # Percorre todas as URLs, extrai as tabelas, limpa os dados e exporta os resultados.
+# Percorre todas as URLs, extrai as tabelas, limpa os dados e exporta os resultados.
 for nome, url in urls.items():
     try:
         tabelas = obter_tabelas_da_wikipedia(url)
@@ -113,12 +122,8 @@ for nome, url in urls.items():
             continue
         for i, tabela in enumerate(tabelas):
             headers, linhas = analisar_tabela(tabela)
-            if len(headers) >= 2 and len(linhas) >= 2:
-                df = limpar_dados(headers, linhas)
-                exportar_dados(df, f'{nome}_tabela_{i+1}')
-                print(f"Dados da tabela {i+1} de {nome} exportados com sucesso!")
-            else:
-                print(f"Tabela {i+1} de {nome} não atende aos requisitos mínimos e foi ignorada.")
+            df = limpar_dados(headers, linhas)
+            exportar_dados(df, f'{nome}_tabela_{i+1}')
         time.sleep(2)  # Espera de 2 segundos entre requisições para evitar bloqueio
     except Exception as e:
         print(f"Erro ao processar {nome}: {e}")

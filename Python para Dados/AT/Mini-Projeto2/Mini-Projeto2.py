@@ -58,10 +58,10 @@ def limpar_dados(df):
             
             df = df[df['email_valido'].notna()] # Remover registros com emails inválidos
             
-            # Remover duplicatas baseadas em Data de Nascimento, Email e ID, mantendo o primeiro com mais campos preenchidos
+            # Remover duplicatas baseadas em Data de Nascimento e Email, mantendo o primeiro com mais campos preenchidos
             df['num_campos_preenchidos'] = df.apply(lambda x: x.count(), axis='columns')
-            df = df.sort_values(by=['num_campos_preenchidos', 'id'], ascending=[False, True])
-            df = df.drop_duplicates(subset=['data_nascimento', 'email', 'id'], keep='first')
+            df = df.sort_values(by=['num_campos_preenchidos'], ascending=[False])
+            df = df.drop_duplicates(subset=['data_nascimento', 'email'], keep='first')
             
             # Remover colunas auxiliares
             df = df.drop(columns=['num_campos_preenchidos', 'email_valido'])
